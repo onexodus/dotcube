@@ -1,5 +1,6 @@
 #!/bin/sh
-export ZDOTDIR=$HOME/.config/zsh
+export ZDOTDIR=$HOME/.dotcube/dotfiles/zsh
+export ZDOTDIR_LOCAL=$HOME/.config/zsh
 HISTFILE=~/.zsh_history
 setopt appendhistory
 

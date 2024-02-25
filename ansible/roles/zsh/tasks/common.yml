@@ -23,14 +23,6 @@
     force: yes
     follow: false
 
-- name: "ZSH | Create symlink for zsh-config"
-  ansible.builtin.file:
-    src: "{{ ansible_user_dir }}/.dotcube/dotfiles/zsh/zsh-config/"
-    dest: "{{ ansible_user_dir }}/.config/zsh/zsh-config"
-    state: link
-    force: yes
-    follow: false
-
 - name: "ZSH | Set default terminal"
   user:
     name: "{{ host_user }}"
