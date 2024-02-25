@@ -46,13 +46,16 @@ By default, running the script will provision only the default `system` and `zsh
 
 #### Other available roles:
 Ugrade all the system packages
-    `dotcube -t upgrade`
+
+    dotcube -t upgrade
 
 Install networking related tools
-    `dotcube -t netops`
+
+    dotcube -t netops
 
 Install github-copilot-cli tool
-    `dotcube -t github-copilot-cli`
+
+    dotcube -t github-copilot-cli
 
 #### dotcube-remote script
 You can also use the `dotcube-remote` script to provision remote systems based on SSH access.
