@@ -81,4 +81,6 @@ and with tags:
 
     dotcube-remote /path/to/inventory.yml -t upgrade
 
+#### debuging script errors
 
+Add more verbosity to the script output using `-vv` or `-vvv`
