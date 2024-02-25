@@ -25,5 +25,5 @@ node_modules/
 .vscode
 # Vagrant
 .vagrant
-# exclude all pyc files
-*.pyc
+# exclude all pyc files in all folders
+**/*.pyc
