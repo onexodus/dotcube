@@ -6,8 +6,7 @@
 
 - name: "SYSTEM | LINUX | Install base packages"
   ansible.builtin.apt:
-    name:
-      name: "{{ item }}"
+    name: "{{ item }}"
     update_cache: yes
     state: present
   become: true

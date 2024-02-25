@@ -16,11 +16,10 @@
 
 - name: "SYSTEM | OSX | Install base Homebrew packages"
   community.general.homebrew:
-    name:
-      - git
-      - zsh
+    name: "{{ item }}"
     state: present
   when: brew_installed.rc == 0
+  loop: "{{ base_packages }}"
 
 - name: "SYSTEM | OSX | Set sudo"
   ansible.builtin.template:

@@ -5,6 +5,12 @@
       - gh
     state: present
 
+- name: "GITHUB-COPILOT | OSX | Install node and npm"
+  community.general.homebrew:
+    name:
+      - node
+    state: present
+
 - name: "GITHUB-COPILOT | OSX | Install github-copilot-cli via npm"
   community.general.npm:
     name: "@githubnext/github-copilot-cli"
