@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 # color codes
 RESTORE='\033[0m'
 NC='\033[0m'

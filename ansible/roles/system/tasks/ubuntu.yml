@@ -1,4 +1,9 @@
 ---
+- name: "SYSTEM | LINUX | Update apt cache"
+  ansible.builtin.apt:
+    update_cache: yes
+  become: true
+
 - name: "SYSTEM | LINUX | Install base packages"
   ansible.builtin.apt:
     name:

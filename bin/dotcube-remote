@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # check if first parameter exists
 if [ -z "$1" ]; then
@@ -10,17 +11,27 @@ if [ -z "$1" ]; then
 fi
 if [[ $1 == *".yml"* ]]; then
     target="inventory/$1"
+    target_type="inventory"
 else
     target="$1,"
+    target_type="host"
 fi
-# Shift the positional parameters to exclude $1
-shift
 
 # Copy SSH keys to remote host
-if ! ssh -o "BatchMode yes" -o "ConnectTimeout 5" "$target" true; then
-    echo "Copying ssh keys to $target, please enter your password when prompted"
-    ssh-copy-id "$HOME/.ssh/id_ed25519.pub" "$target"
+if ! ssh -o "BatchMode yes" -o "ConnectTimeout 5" "$1" true; then
+    echo "Copying ssh keys to $1 - please enter your password when prompted"
+    if [[ "$target_type" == "host" ]]; then
+        if [[ " $@ " =~ " -u " ]]; then
+            username=$(echo "$@" | sed -n -e 's/^.*-u \([^ ]*\).*$/\1/p')
+            ssh-copy-id -i "$HOME/.ssh/id_ed25519.pub" "$username@$1"
+        else
+            ssh-copy-id -i "$HOME/.ssh/id_ed25519.pub" "$1"
+        fi
+    fi
 fi
+
+# Shift the positional parameters to exclude $1
+shift
 
 DOTFILES_HOME="$HOME/.dotcube"
 export DOTCUBE_REMOTE_TRIGGER=true
