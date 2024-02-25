@@ -1,0 +1,27 @@
+# OSX stuff
+.DS_Store
+.DS_Store?
+# swap
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-v][a-z]
+[._]sw[a-p]
+# session
+Session.vim
+# temporary
+.netrwhist
+*~
+# auto-generated tag files
+tags
+# node_modules
+node_modules/
+# env files
+.env*
+# Elixir Language Server
+.elixir_ls/
+# Hidden IEx file
+.iex.exs
+# VS Code stuff
+.vscode
+# Vagrant
+.vagrant

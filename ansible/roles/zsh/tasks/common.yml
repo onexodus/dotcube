@@ -1,0 +1,41 @@
+---
+- name: "ZSH | Copy .dotcube folder"
+  ansible.posix.synchronize:
+    src: "{{ lookup('env', 'HOME') }}/.dotcube"
+    dest: "{{ ansible_user_dir }}"
+  when: called_from == 'remote'
+  changed_when: false
+
+- name: "ZSH | Install zsh plugins/completions"
+  git:
+    repo: "{{ item.repo }}{{ item.project }}.git"
+    dest: "{{ ansible_user_dir }}/.config/zsh/plugins/{{ item.project }}"
+    clone: yes
+    update: yes
+    force: yes
+  loop: "{{ zsh_plugin_repos }}"
+
+- name: "ZSH | Create symlink for zshrc"
+  ansible.builtin.file:
+    src: "{{ ansible_user_dir }}/.dotcube/dotfiles/zsh/zshrc"
+    dest: "{{ ansible_user_dir }}/.zshrc"
+    state: link
+    force: yes
+    follow: false
+
+- name: "ZSH | Create symlink for zsh-config"
+  ansible.builtin.file:
+    src: "{{ ansible_user_dir }}/.dotcube/dotfiles/zsh/zsh-config/"
+    dest: "{{ ansible_user_dir }}/.config/zsh/zsh-config"
+    state: link
+    force: yes
+    follow: false
+
+- name: "ZSH | Set default terminal"
+  user:
+    name: "{{ host_user }}"
+    shell: /bin/zsh
+  become: true
+
+- name: ZSH | Run Prompt Tasks
+  ansible.builtin.import_tasks: prompt.yml

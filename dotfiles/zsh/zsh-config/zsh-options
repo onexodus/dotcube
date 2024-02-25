@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Load extra tools
+export NEOFETCH_ENABLED=true
+export GITHUB_COPILOT_ENABLED=true
+
+# Set the prompt to starship or pure
+export MYPROMPT="starship"

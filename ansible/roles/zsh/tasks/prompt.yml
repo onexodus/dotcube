@@ -1,0 +1,81 @@
+---
+- name: "ZSH | LINUX | Remove fzf"
+  ansible.builtin.apt:
+    name: "fzf"
+    state: absent
+  become: true
+  when: ansible_os_family == 'Debian'
+
+- name: "ZSH | LINUX | Install neofetch"
+  ansible.builtin.apt:
+    name: "neofetch"
+    state: present
+  become: true
+  when: ansible_os_family == 'Debian'
+
+- name: "ZSH | OSX | Install neofetch"
+  community.general.homebrew:
+    name: "neofetch"
+    state: present
+  when: ansible_os_family == 'Darwin'
+
+# starship linux install
+- name: "ZSH | LINUX | Check if starship is installed"
+  ansible.builtin.command: "starship --version"
+  register: starship_installed
+  ignore_errors: true
+  changed_when: false
+  when: ansible_os_family == 'Debian'
+
+- name: "ZSH | LINUX | Install starship"
+  ansible.builtin.shell: "curl -fsSL https://starship.rs/install.sh | sh -s -- -y"
+  become: true
+  when: (starship_installed.rc != 0) and (ansible_os_family == 'Debian')
+  ignore_errors: true
+  changed_when: false
+
+- name: "ZSH | OSX | Install starship"
+  community.general.homebrew:
+    name: "starship"
+    state: present
+  when: ansible_os_family == 'Darwin'
+
+# pure-prompt
+- name: "ZSH | LINUX | Install pure-prompt via npm"
+  community.general.npm:
+    name: "pure-prompt"
+    global: yes
+  become: true
+  when: ansible_os_family == 'Debian'
+
+- name: "ZSH | OSX | Install pure-prompt via brew"
+  community.general.homebrew:
+    name: "pure"
+    state: present
+  when: ansible_os_family == 'Darwin'
+
+### config files
+
+- name: "ZSH | Create symlink for neofetch config"
+  ansible.builtin.file:
+    src: "{{ ansible_user_dir }}/.dotcube/dotfiles/neofetch/"
+    dest: "{{ ansible_user_dir }}/.config/neofetch"
+    state: link
+    force: yes
+    follow: false
+
+- name: "ZSH | Create symlink for starship config folder"
+  ansible.builtin.file:
+    src: "{{ ansible_user_dir }}/.dotcube/dotfiles/starship/"
+    dest: "{{ ansible_user_dir }}/.config/starship"
+    state: link
+    force: yes
+    follow: false
+
+- name: "ZSH | Create symlink for starship config"
+  ansible.builtin.file:
+    src: "{{ ansible_user_dir }}/.dotcube/dotfiles/starship/starship.toml"
+    dest: "{{ ansible_user_dir }}/.config/starship.toml"
+    state: link
+    force: yes
+    follow: false

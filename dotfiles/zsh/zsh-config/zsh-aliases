@@ -1,0 +1,93 @@
+#!/bin/sh
+
+# alias top='glances'
+alias jc='journalctl -xe'
+alias up="uptime --pretty | sed -e 's/up //g' -e 's/ days/d/g' -e 's/ day/d/g' -e 's/ hours/h/g' -e 's/ hour/h/g' -e 's/ minutes/m/g' -e 's/, / /g'"
+
+# confirm before overwriting something
+alias cp="cp -i"
+alias mv='mv -i'
+alias rm='rm -i'
+
+# Colorize grep output (good for log files)
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+
+# easier to read disk
+alias df='df -h'     # human-readable sizes
+alias free='free -h' # human-readable sizes
+
+# get top process eating memory
+alias psmem='ps auxf | sort -nr -k 4 | head -5'
+
+# get top process eating cpu ##
+alias pscpu='ps auxf | sort -nr -k 3 | head -5'
+
+# swap ls
+alias la="ls -alh"
+
+# if [ -x "$(command -v colorls)" ]; then
+#     alias ls="colorls"
+#     alias la="colorls -al"
+# fi
+
+# if [ -x "$(command -v exa)" ]; then
+#     alias ls="exa --icons"
+#     alias la="exa --icons -algm --time-style long-iso --git"
+# fi
+
+# gpg encryption
+# verify signature for iso's
+alias gpg-check="gpg2 --keyserver-options auto-key-retrieve --verify"
+# receive the key of a developer
+alias gpg-retrieve="gpg2 --keyserver-options auto-key-retrieve --receive-keys"
+
+# Network related
+alias p='ping'
+alias p100='ping -c 100 -q -i 0.02'
+alias p1000='ping -c 1000 -q -i 0.02'
+alias qmtr='mtr -rc 1'
+alias qmtrn='mtr -rnc 1'
+alias ripe='whois -h whois.ripe.net'
+alias t='telnet'
+alias ports='netstat -tulanp'
+alias listening='netstat -tanop | grep LISTEN'
+alias established='netstat -tanop | grep ESTABLISHED'
+alias mtr='sudo mtr'
+alias iftop='sudo iftop'
+myip() {
+	dig TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'"' '{ print $2}'
+}
+
+# Looking Glasses
+alias lgatt='jlogin 12.0.1.28'
+alias lghe='telnet route-server.he.net'
+alias lgukgblx='telnet route-server.eu.gblx.net'
+alias lgoregon='jlogin route-views.oregon-ix.net'
+alias lgusagblx='telnet route-server.gblx.net'
+
+alias ramclear='sudo su -c "sync; echo \"1\" >/proc/sys/vm/drop_caches"'
+
+# shortcuts
+alias dc='docker compose'
+alias ap="ansible-playbook"
+alias av="ansible-vault"
+
+# case "$(uname -s)" in
+
+# Darwin)
+# 	# echo 'Mac OS X'
+# 	;;
+
+# Linux)
+#     # echo 'Linux'
+# 	;;
+
+# CYGWIN* | MINGW32* | MSYS* | MINGW*)
+# 	# echo 'MS Windows'
+# 	;;
+# *)
+# 	# echo 'Other OS'
+# 	;;
+# esac

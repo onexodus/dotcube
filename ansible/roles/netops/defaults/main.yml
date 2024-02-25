@@ -1,0 +1,21 @@
+network_packages:
+  - net-tools
+  - nmap
+  - traceroute
+  - whois
+  - iputils-ping
+  - dnsutils
+  - iproute2
+  - iperf
+  - mtr
+  - tcpdump
+  - netcat
+  - curl
+  - wget
+  - jq
+  - httpie
+  - ngrep
+  - socat
+  - ipcalc
+  - iperf3
+  - iftop

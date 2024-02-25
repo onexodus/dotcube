@@ -1,0 +1,4 @@
+---
+- name: "UPGRADE | OSX | Upgrade all Homebrew packages"
+  community.general.homebrew:
+    upgrade_all: yes

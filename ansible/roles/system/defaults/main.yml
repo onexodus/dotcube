@@ -1,0 +1,4 @@
+base_packages:
+  - git
+  - zsh
+  - npm

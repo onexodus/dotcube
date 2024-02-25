@@ -1,0 +1,13 @@
+---
+- name: "NET-OPS | LINUX | Update APT Repos"
+  ansible.builtin.apt:
+    update_cache: true
+  become: true
+
+- name: "NET-OPS | LINUX | Install network packages"
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: present
+  become: true
+  loop: "{{ network_packages }}"

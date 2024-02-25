@@ -1,0 +1,8 @@
+zsh_plugin_repos:
+    - {repo: "https://github.com/zsh-users/", project: "zsh-autosuggestions"}
+    - {repo: "https://github.com/zsh-users/", project: "zsh-syntax-highlighting"}
+    - {repo: "https://github.com/zsh-users/", project: "zsh-history-substring-search"}
+    - {repo: "https://github.com/zsh-users/", project: "zsh-completions"}
+    - {repo: "https://github.com/hlissner/", project: "zsh-autopair"}
+    - {repo: "https://github.com/junegunn/", project: "fzf"}
+

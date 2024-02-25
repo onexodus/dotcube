@@ -1,0 +1,30 @@
+---
+- name: "SYSTEM | LINUX | Install base packages"
+  ansible.builtin.apt:
+    name:
+      name: "{{ item }}"
+    update_cache: yes
+    state: present
+  become: true
+  loop: "{{ base_packages }}"
+
+- name: "SYSTEM | LINUX | Set sudo"
+  ansible.builtin.template:
+    src: user-sudo.j2
+    dest: "/etc/sudoers.d/{{ ansible_env['USER'] }}"
+    mode: "0644"
+  become: true
+
+- name: "SYSTEM | LINUX | Ensure group exists for current user"
+  ansible.builtin.group:
+    name: "{{ host_user }}"
+    state: present
+  become: true
+
+- name: "SYSTEM | LINUX | Ensure user is in group {{ host_user }}"
+  ansible.builtin.user:
+    name: "{{ host_user }}"
+    groups: "{{ host_user }}"
+    append: true
+  become: true
+

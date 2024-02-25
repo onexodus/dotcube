@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# Themes
+zsh_add_file "zsh-config/starship.zsh"
+zsh_add_file "zsh-config/pure.zsh"

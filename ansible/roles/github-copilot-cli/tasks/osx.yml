@@ -1,0 +1,13 @@
+---
+- name: "GITHUB-COPILOT | OSX | Install gh packages"
+  community.general.homebrew:
+    name:
+      - gh
+    state: present
+
+- name: "GITHUB-COPILOT | OSX | Install github-copilot-cli via npm"
+  community.general.npm:
+    name: "@githubnext/github-copilot-cli"
+    global: yes
+    state: present
+  become: true

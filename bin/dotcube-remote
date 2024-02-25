@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# check if first parameter exists
+if [ -z "$1" ]; then
+    echo "Usage: dotcube-remote <remote-host> [ansible-playbook-args]"
+    echo "[ansible-playbook-args] are passed directly to ansible-playbook"
+    echo "Use -t to specify the target role to run"
+    echo "Example: dotcube-remote <remote-host> -t zsh"
+    exit 1
+fi
+if [[ $1 == *".yml"* ]]; then
+    target="inventory/$1"
+else
+    target="$1,"
+fi
+# Shift the positional parameters to exclude $1
+shift
+
+DOTFILES_HOME="$HOME/.dotcube"
+export DOTCUBE_REMOTE_TRIGGER=true
+"$DOTFILES_HOME"/bin/dotcube -i "$target" "$@"

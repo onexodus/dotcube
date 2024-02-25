@@ -1,0 +1,43 @@
+---
+- name: "SYSTEM | OSX | Check if Homebrew is installed"
+  ansible.builtin.command: "brew --version"
+  register: brew_installed
+  ignore_errors: true
+  changed_when: false
+
+- name: "SYSTEM | OSX | Install Homebrew"
+  ansible.builtin.command: "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+  when: brew_installed.rc != 0
+
+- name: "SYSTEM | OSX | Update Homebrew"
+  ansible.builtin.command: "brew update"
+  when: brew_installed.rc == 0
+  changed_when: false
+
+- name: "SYSTEM | OSX | Install base Homebrew packages"
+  community.general.homebrew:
+    name:
+      - git
+      - zsh
+    state: present
+  when: brew_installed.rc == 0
+
+- name: "SYSTEM | OSX | Set sudo"
+  ansible.builtin.template:
+    src: user-sudo.j2
+    dest: "/etc/sudoers.d/{{ ansible_env['USER'] }}"
+    mode: "0644"
+  become: true
+
+- name: "SYSTEM | OSX | Ensure group exists for current user"
+  ansible.builtin.group:
+    name: "{{ host_user }}"
+    state: present
+  become: true
+
+- name: "SYSTEM | OSX | Ensure user is in group {{ host_user }}"
+  ansible.builtin.user:
+    name: "{{ host_user }}"
+    groups: "{{ host_user }}"
+    append: true
+  become: true
