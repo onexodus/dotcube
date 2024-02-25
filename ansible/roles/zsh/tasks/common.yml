@@ -15,6 +15,18 @@
     force: yes
   loop: "{{ zsh_plugin_repos }}"
 
+- name: "ZSH | Check if .zshrc is a symlink"
+  ansible.builtin.stat:
+    path: "{{ ansible_user_dir }}/.zshrc"
+  register: zshrc
+
+- name: "ZSH | Backup .zshrc"
+  ansible.builtin.shell: mv {{ ansible_user_dir }}/.zshrc {{ ansible_user_dir }}/.zshrc.bak
+  args:
+    warn: no
+  when: zshrc.stat.islnk == false
+  ignore_errors: true
+
 - name: "ZSH | Create symlink for zshrc"
   ansible.builtin.file:
     src: "{{ ansible_user_dir }}/.dotcube/dotfiles/zsh/zshrc"
