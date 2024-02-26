@@ -69,22 +69,21 @@ Install networking related tools
     dotcube -t netops
 
 
-
 ### Remote deploy functionality - dotcube-remote script
 You can also use the `dotcube-remote` script to provision remote systems based on SSH access.
 The script will check if it can login without password via SSH to remote host and otherwise it will copy local public key to authorized_keys on remote host.
 
 Base deploy of `system` and `zsh` roles:
 
-    dotcube-remote <remote-ip or hostname>
+    dotcube-remote <IP or hostname>
 
 Tags are also supported:
 
-    dotcube-remote <remote-ip or hostname> -t <tag>
+    dotcube-remote <IP or hostname> -t <tag>
 
 If you need to specify the user to be used on the remote system (in case is different from local user):
 
-    dotcube-remote <remote-ip or hostname> -u <user>
+    dotcube-remote <IP or hostname> -u <user>
 
 For deploying to multiple hosts you can create your own inventory file in yml format (outside of this repo) and use it instead of the remote ip/hostname like in the following example:
 
@@ -99,3 +98,13 @@ and with tags:
 ### Debuging script errors
 
 Add more verbosity to the script output using `-vv` or `-vvv`
+
+
+
+### Rollback shell to original
+
+To rollback the shell to the original before deployment use:
+
+        dotcube -t rollback
+
+        dotcube-remote <IP or hostname> -t rollback
