@@ -103,8 +103,6 @@ Add more verbosity to the script output using `-vv` or `-vvv`
 
 ### Rollback shell to original
 
-To rollback the shell to the original use:
+To rollback the shell to the original use the `rollback` tag:
 
         dotcube -t rollback
-
-        dotcube-remote <IP or hostname> -t rollback
