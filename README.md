@@ -103,7 +103,7 @@ Add more verbosity to the script output using `-vv` or `-vvv`
 
 ### Rollback shell to original
 
-To rollback the shell to the original before deployment use:
+To rollback the shell to the original use:
 
         dotcube -t rollback
 
