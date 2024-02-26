@@ -1,4 +1,23 @@
 ---
+- name: "ZSH | Check if first run"
+  ansible.builtin.stat:
+    path: "{{ ansible_user_dir }}/.dotcube.run"
+  register: dotcube_run
+
+# - name: "ZSH | Backing up the original shell"
+#   ansible.builtin.shell: echo {{ ansible_env.SHELL }}
+#   register: originalshell
+#   when: dotcube_run.stat.exists == false
+#   changed_when: false
+
+- name: "ZSH | Backing up the original shell to a file"
+  ansible.builtin.copy:
+    content: "{{ ansible_env.SHELL }}"
+    dest: "{{ ansible_user_dir }}/.config/.dotcube_original_shell"
+    force: yes
+  when: dotcube_run.stat.exists == false
+  changed_when: false
+
 - name: "ZSH | Copy .dotcube folder"
   ansible.posix.synchronize:
     src: "{{ lookup('env', 'HOME') }}/.dotcube"

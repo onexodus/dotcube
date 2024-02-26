@@ -27,15 +27,18 @@ Custom ZSH terminal configuration, currently supporting the following features:
   - networking related apps (optional)
 
 
+
 ### Installation and initial provisioning
 Just copy-paste the following command in the terminal:
 
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/onexodus/dotcube/main/bin/dotcube)"
 
 
+
 ### Using dotcube and dotcube-remote
 After the first provisioning you will have the `dotcube` and `dotcube-remote` commands available in the path.
 Just running `dotcube` will update the system with latest version of the DOTCUBE repo/configuration.
+
 
 
 ### Available options for `dotcube`
@@ -45,6 +48,7 @@ All the roles in the ansible folder can be deployed using tags option `-t` and s
     dotcube -t netops
 
 By default, running the script will provision only the default `system` and `zsh` roles.
+
 
 
 ### Using specific role:
@@ -63,6 +67,7 @@ Ugrade all the system packages
 Install networking related tools
 
     dotcube -t netops
+
 
 
 ### Remote deploy functionality - dotcube-remote script
@@ -88,6 +93,7 @@ For deploying to multiple hosts you can create your own inventory file in yml fo
 and with tags:
 
     dotcube-remote /path/to/inventory.yml -t upgrade
+
 
 
 ### Debuging script errors

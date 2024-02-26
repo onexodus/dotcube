@@ -5,6 +5,7 @@ set -e
 if [ -z "$1" ]; then
     echo "Usage: dotcube-remote <remote-host> [ansible-playbook-args]"
     echo "[ansible-playbook-args] are passed directly to ansible-playbook"
+    echo ""
     echo "Use -t to specify the target role to run"
     echo "Example: dotcube-remote <remote-host> -t zsh"
     exit 1
@@ -14,6 +15,7 @@ if [[ $1 == *".yml"* ]]; then
     target_type="inventory"
 else
     target="$1,"
+    target_value="$1"
     target_type="host"
 fi
 
@@ -36,3 +38,24 @@ shift
 DOTFILES_HOME="$HOME/.dotcube"
 export DOTCUBE_REMOTE_TRIGGER=true
 "$DOTFILES_HOME"/bin/dotcube -i "$target" "$@"
+
+if [[ " $@ " =~ " -t " ]]; then
+    tag_used=$(echo "$@" | sed -n -e 's/^.*-t \([^ ]*\).*$/\1/p')
+    case "$tag_used" in
+        rollback)
+            echo -e ""
+            echo -e "${CHECK_MARK} ${CYAN}dotcube: Rollback complete!${NC}"
+            ;;
+        remove)
+            echo -e ""
+            echo -e "${CHECK_MARK} ${CYAN}dotcube: Remove complete!${NC}"
+            ;;
+        *)
+            if ! ssh "$target_value" test -f "\$HOME/.dotcube.run"; then
+                echo -e ""
+                echo -e "${CHECK_MARK} ${CYAN}Initial provisioning - dotcube: Bootstrap complete!${NC}"
+                ssh "$target_value" touch "\$HOME/.dotcube.run"
+            fi
+            ;;
+    esac
+fi

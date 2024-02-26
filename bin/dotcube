@@ -183,14 +183,12 @@ _task "Running playbook"; _task_done
 
 # Run playbook
 if [[ -f $VAULT_SECRET ]]; then
-    # if DOTCUBE_REMOTE_TRIGGER is true, run remote.yml, else run main.yml (localhost)
     if [[ -n "$DOTCUBE_REMOTE_TRIGGER" ]]; then
         ansible-playbook --vault-password-file "$VAULT_SECRET" "$DOTFILES_HOME/ansible/remote.yml" "$@"
     else
         ansible-playbook --vault-password-file "$VAULT_SECRET" "$DOTFILES_HOME/ansible/main.yml" "$@"
     fi
 else
-    # if DOTCUBE_REMOTE_TRIGGER is true, run remote.yml, else run main.yml (localhost)
     if [[ -n "$DOTCUBE_REMOTE_TRIGGER" ]]; then
         ansible-playbook "$DOTFILES_HOME/ansible/remote.yml" "$@"
     else
@@ -200,12 +198,41 @@ fi
 
 popd > /dev/null 2>&1 # return to previous directory
 
-if ! [[ -f "$IS_FIRST_RUN" ]]; then
-    echo -e ""
-    echo -e "${CHECK_MARK} ${CYAN}Initial provisioning - dotcube: Bootstrap complete!${NC}"
-    echo -e "${ARROW} ${CYAN}Please reload the terminal to complete the setup.${NC}"
-    touch "$IS_FIRST_RUN"
-else
-    echo -e ""
-    echo -e "${CHECK_MARK} ${CYAN}dotcube: Bootstrap complete!${NC}"
+if [[ -z "$DOTCUBE_REMOTE_TRIGGER" ]]; then
+    if ! [[ -f "$IS_FIRST_RUN" ]]; then
+        echo -e ""
+        echo -e "${CHECK_MARK} ${CYAN}Initial provisioning - dotcube: Bootstrap complete!${NC}"
+        echo -e "${ARROW} ${CYAN}Please reload the terminal to complete the setup.${NC}"
+        touch "$IS_FIRST_RUN"
+    else
+        echo -e ""
+        echo -e "${CHECK_MARK} ${CYAN}dotcube: Bootstrap complete!${NC}"
+    fi
 fi
+
+if [[ -z "$DOTCUBE_REMOTE_TRIGGER" ]]; then
+    if [[ " $@ " =~ " -t " ]]; then
+        tag_used=$(echo "$@" | sed -n -e 's/^.*-t \([^ ]*\).*$/\1/p')
+        case "$tag_used" in
+            rollback)
+                echo -e ""
+                echo -e "${CHECK_MARK} ${CYAN}dotcube: Rollback complete!${NC}"
+                ;;
+            remove)
+                echo -e ""
+                echo -e "${CHECK_MARK} ${CYAN}dotcube: Remove complete!${NC}"
+                ;;
+            *)
+                if ! [[ -f "$IS_FIRST_RUN" ]]; then
+                    echo -e ""
+                    echo -e "${CHECK_MARK} ${CYAN}Initial provisioning - dotcube: Bootstrap complete!${NC}"
+                    touch "$IS_FIRST_RUN"
+                else
+                    echo -e ""
+                    echo -e "${CHECK_MARK} ${CYAN}dotcube: Bootstrap complete!${NC}"
+                fi
+                ;;
+        esac
+    fi
+fi
+# End of script

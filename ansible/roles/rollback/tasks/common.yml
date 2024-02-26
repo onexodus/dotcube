@@ -1,0 +1,39 @@
+---
+- name: ROLLBACK | Register if provisioned
+  stat:
+    path: "{{ ansible_user_dir }}/.dotcube.run"
+  register: dotcube_run
+
+- name: ROLLBACK | Register original shell
+  shell: cat "{{ ansible_user_dir }}/.config/.dotcube_original_shell"
+  register: original_shell
+  when: dotcube_run.stat.exists
+
+- name: ROLLBACK | Check if .zshrc backup exists
+  stat:
+    path: "{{ ansible_user_dir }}/.zshrc.bak"
+  register: zshrc_bak
+  when: original_shell.stdout == "/bin/zsh"
+
+- name: ROLLBACK | Restore .zshrc backup
+  shell: cp -f "{{ ansible_user_dir }}/.zshrc.bak }}" "{{ ansible_user_dir }}/.zshrc"
+  when: original_shell.stdout == "/bin/zsh" and zshrc_bak.stat.exists
+
+- name: ROLLBACK | Removing custom .zshrc
+  file:
+    path: "{{ ansible_user_dir }}/.zshrc"
+    state: absent
+  when: original_shell.stdout == "/bin/zsh" and not zshrc_bak.stat.exists
+
+- name: ROLLBACK | Change shell to original
+  user:
+    name: "{{ host_user }}"
+    shell: "{{ original_shell.stdout}}"
+  become: true
+  when: original_shell.stdout != "/bin/zsh"
+
+- name: ROLLBACK | Remove run file
+  file:
+    path: "{{ ansible_user_dir }}/.dotcube.run"
+    state: absent
+  when: dotcube_run.stat.exists
