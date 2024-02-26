@@ -24,17 +24,19 @@ Custom ZSH terminal configuration, currently supporting the following features:
   - neofetch
 
 - Apps
-  - github-copilot-cli tool
   - networking related apps (optional)
+
 
 ### Installation and initial provisioning
 Just copy-paste the following command in the terminal:
 
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/onexodus/dotcube/main/bin/dotcube)"
 
-### Using dotcube and dotcube-remote
+
+#### Using dotcube and dotcube-remote
 After the first provisioning you will have the `dotcube` and `dotcube-remote` commands available in the path.
 Just running `dotcube` will update the system with latest version of the DOTCUBE repo/configuration.
+
 
 #### Available options for `dotcube`
 As `dotcube` is ultimatelly triggering the run of an ansible-playbook command, it's configured to support passing extra options to it.
@@ -44,7 +46,16 @@ All the roles in the ansible folder can be deployed using tags option `-t` and s
 
 By default, running the script will provision only the default `system` and `zsh` roles.
 
-#### Other available roles:
+
+#### Using specific role:
+Run the base system role
+
+    dotcube -t system
+
+Deploy the zsh configuration only
+
+    dotcube -t zsh
+
 Ugrade all the system packages
 
     dotcube -t upgrade
@@ -53,11 +64,8 @@ Install networking related tools
 
     dotcube -t netops
 
-Install github-copilot-cli tool
 
-    dotcube -t github-copilot-cli
-
-#### dotcube-remote script
+#### Remote deploy functionality - dotcube-remote script
 You can also use the `dotcube-remote` script to provision remote systems based on SSH access.
 The script will check if it can login without password via SSH to remote host and otherwise it will copy local public key to authorized_keys on remote host.
 
@@ -81,6 +89,7 @@ and with tags:
 
     dotcube-remote /path/to/inventory.yml -t upgrade
 
-#### debuging script errors
+
+#### Debuging script errors
 
 Add more verbosity to the script output using `-vv` or `-vvv`
