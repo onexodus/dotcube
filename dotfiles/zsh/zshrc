@@ -72,3 +72,8 @@ zsh_add_file "zsh-config/zsh-loadextras"
 
 # Init prompt
 zsh_add_file "zsh-config/zsh-prompt"
+
+# Load custom zsh config post-prompt
+if [ -f "$ZDOTDIR_LOCAL/zsh-custom" ]; then
+    zsh_add_file "$ZDOTDIR_LOCAL/zsh-custom"
+fi
