@@ -1,0 +1,10 @@
+#!/bin/sh
+# This file is meant to be sourced from the main zshrc file - pre-prompt
+
+if [ -x "$(command -v github-copilot-cli)" ]; then
+    eval "$(github-copilot-cli alias -- "$0")"
+fi
+
+if [ "$NEOFETCH_ENABLED" = true ] && [ -x "$(command -v neofetch)" ]; then
+    neofetch
+fi

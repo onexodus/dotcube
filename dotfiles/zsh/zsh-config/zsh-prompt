@@ -3,3 +3,16 @@
 # Themes
 zsh_add_file "zsh-config/starship.zsh"
 zsh_add_file "zsh-config/pure.zsh"
+
+# Set the prompt to starship or pure
+case $MYPROMPT in
+    "starship")
+        if [ -x "$(command -v starship)" ]; then
+            eval "$(starship init zsh)"
+        fi
+        ;;
+    "pure")
+        autoload -U promptinit; promptinit
+        prompt pure
+        ;;
+esac
