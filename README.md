@@ -33,12 +33,12 @@ Just copy-paste the following command in the terminal:
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/onexodus/dotcube/main/bin/dotcube)"
 
 
-#### Using dotcube and dotcube-remote
+### Using dotcube and dotcube-remote
 After the first provisioning you will have the `dotcube` and `dotcube-remote` commands available in the path.
 Just running `dotcube` will update the system with latest version of the DOTCUBE repo/configuration.
 
 
-#### Available options for `dotcube`
+### Available options for `dotcube`
 As `dotcube` is ultimatelly triggering the run of an ansible-playbook command, it's configured to support passing extra options to it.
 
 All the roles in the ansible folder can be deployed using tags option `-t` and specifying the role name like in the following example:
@@ -47,7 +47,7 @@ All the roles in the ansible folder can be deployed using tags option `-t` and s
 By default, running the script will provision only the default `system` and `zsh` roles.
 
 
-#### Using specific role:
+### Using specific role:
 Run the base system role
 
     dotcube -t system
@@ -65,7 +65,7 @@ Install networking related tools
     dotcube -t netops
 
 
-#### Remote deploy functionality - dotcube-remote script
+### Remote deploy functionality - dotcube-remote script
 You can also use the `dotcube-remote` script to provision remote systems based on SSH access.
 The script will check if it can login without password via SSH to remote host and otherwise it will copy local public key to authorized_keys on remote host.
 
@@ -90,6 +90,6 @@ and with tags:
     dotcube-remote /path/to/inventory.yml -t upgrade
 
 
-#### Debuging script errors
+### Debuging script errors
 
 Add more verbosity to the script output using `-vv` or `-vvv`
