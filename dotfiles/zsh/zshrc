@@ -39,7 +39,6 @@ source "$ZDOTDIR/zsh-config/zsh-functions"
 # Normal files to source
 zsh_add_file "zsh-config/zsh-exports"
 zsh_add_file "zsh-config/zsh-aliases"
-zsh_add_file "zsh-config/zsh-prompt"
 zsh_add_file "zsh-config/zsh-local"
 
 # Plugins
@@ -52,7 +51,6 @@ zsh_add_plugin "junegunn/fzf" "shell/*.zsh"
 zsh_add_completion "zsh-users/zsh-completions/src" true
 
 # Key-bindings
-
 case "$(uname -s)" in
 
 Linux)
@@ -69,22 +67,8 @@ Darwin)
 
 esac
 
-if [ "$NEOFETCH_ENABLED" = true ] && [ -x "$(command -v neofetch)" ]; then
-    neofetch
-fi
+# Load extras
+zsh_add_file "zsh-config/zsh-loadextras"
 
-if [ "$GITHUB_COPILOT_ENABLED" = true ] && [ -x "$(command -v github-copilot-cli)" ]; then
-    eval "$(github-copilot-cli alias -- "$0")"
-fi
-
-case $MYPROMPT in
-    "starship")
-        if [ -x "$(command -v starship)" ]; then
-            eval "$(starship init zsh)"
-        fi
-        ;;
-    "pure")
-        autoload -U promptinit; promptinit
-        prompt pure
-        ;;
-esac
+# Init prompt
+zsh_add_file "zsh-config/zsh-prompt"
