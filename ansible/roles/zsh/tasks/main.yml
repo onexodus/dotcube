@@ -1,3 +1,6 @@
 ---
 - name: ZSH | Run ZSH Tasks
   ansible.builtin.import_tasks: common.yml
+
+- name: ZSH | Run Prompt Tasks
+  ansible.builtin.import_tasks: prompt.yml

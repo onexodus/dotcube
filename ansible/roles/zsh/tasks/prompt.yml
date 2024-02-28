@@ -6,6 +6,23 @@
   become: true
   when: ansible_os_family == 'Debian'
 
+- name: "ZSH | LINUX | Check if fzf is installed"
+  ansible.builtin.command: "fzf --version"
+  register: fzf_installed
+  ignore_errors: true
+  changed_when: false
+  when: ansible_os_family == 'Debian'
+
+- name: "ZSH | LINUX | Install fzf"
+  ansible.builtin.shell: "bash -f {{ ansible_user_dir }}/.config/zsh/plugins/fzf/install --bin"
+  when: (fzf_installed.rc != 0) and (ansible_os_family == 'Debian')
+
+- name: "ZSH | OSX | Install fzf"
+  community.general.homebrew:
+    name: "fzf"
+    state: present
+  when: ansible_os_family == 'Darwin'
+
 - name: "ZSH | LINUX | Install neofetch"
   ansible.builtin.apt:
     name: "neofetch"

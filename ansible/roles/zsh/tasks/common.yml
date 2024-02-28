@@ -54,5 +54,3 @@
     shell: /bin/zsh
   become: true
 
-- name: ZSH | Run Prompt Tasks
-  ansible.builtin.import_tasks: prompt.yml
