@@ -4,7 +4,7 @@ function zsh_add_file() {
 }
 
 function zsh_add_file_local() {
-    [ -f "$ZDOTDIR_LOCAL/$1" ] && source "$ZDOTDIR_LOCAL/$1"
+    [ -f "$ZDOTDIR/$1" ] && source "$ZDOTDIR/$1"
 }
 
 function zsh_add_extra_files() {
@@ -13,16 +13,16 @@ function zsh_add_extra_files() {
 
 function zsh_add_plugin() {
     PLUGIN_NAME=$(echo $1 | cut -d "/" -f 2)
-    if [ -d "$ZDOTDIR_LOCAL/plugins/$PLUGIN_NAME" ]; then 
+    if [ -d "$ZDOTDIR/plugins/$PLUGIN_NAME" ]; then 
         zsh_add_file_local "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
         zsh_add_file_local "plugins/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
         if [ $2 ]; then
-            for f in $ZDOTDIR_LOCAL/plugins/$PLUGIN_NAME/$~2; do 
+            for f in $ZDOTDIR/plugins/$PLUGIN_NAME/$~2; do 
                 zsh_add_extra_files $f; 
             done
         fi
     else
-        git clone "https://github.com/$1.git" "$ZDOTDIR_REPO/plugins/$PLUGIN_NAME"
+        git clone "https://github.com/$1.git" "$ZDOTDIR/plugins/$PLUGIN_NAME"
     fi
 }
 
@@ -42,15 +42,15 @@ function zsh_add_completion() {
     if [ ! -z $COMP_PATH ]; then
         COMP_PATH=/$COMP_PATH
     fi
-    if [ -d "$ZDOTDIR_REPO/plugins/$PLUGIN_NAME" ]; then 
+    if [ -d "$ZDOTDIR/plugins/$PLUGIN_NAME" ]; then 
         # For completions
-		completion_file_path=$(ls $ZDOTDIR_REPO/plugins/$PLUGIN_NAME$COMP_PATH/_*)
+		completion_file_path=$(ls $ZDOTDIR/plugins/$PLUGIN_NAME$COMP_PATH/_*)
 		fpath+="$(dirname "${completion_file_path}")" 2>/dev/null #route errors to devnull for osx
-        zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh"
+        zsh_add_file_local "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh"
     else
-        git clone "https://github.com/$GIT_NAME.git" "$ZDOTDIR_REPO/plugins/$PLUGIN_NAME"
-		fpath+=$(ls $ZDOTDIR_REPO/plugins/$PLUGIN_NAME$COMP_PATH/_*)
-        [ -f $ZDOTDIR_REPO/.zccompdump ] && $ZDOTDIR_REPO/.zccompdump
+        git clone "https://github.com/$GIT_NAME.git" "$ZDOTDIR/plugins/$PLUGIN_NAME"
+		fpath+=$(ls $ZDOTDIR/plugins/$PLUGIN_NAME$COMP_PATH/_*)
+        [ -f $ZDOTDIR/.zccompdump ] && $ZDOTDIR/.zccompdump
     fi
 	completion_file="$(basename "${completion_file_path}")"
 	if [ "$2" = true ] && compinit "${completion_file:1}"

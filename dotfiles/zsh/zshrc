@@ -1,7 +1,6 @@
 #!/bin/sh
 export ZDOTDIR=$HOME/.config/zsh
-export ZDOTDIR_REPO_=$HOME/.dotcube/dotfiles/zsh
-export ZDOTDIR_LOCAL=$HOME/.config/zsh
+export ZDOTDIR_REPO=$HOME/.dotcube/dotfiles/zsh
 HISTFILE=~/.zsh_history
 setopt appendhistory
 
@@ -31,11 +30,11 @@ zle -N down-line-or-beginning-search
 # Colors
 autoload -Uz colors && colors
 
-# Load options
-source "$ZDOTDIR_REPO/zsh-config/zsh-options"
-
 # Useful Functions
 source "$ZDOTDIR_REPO/zsh-config/zsh-functions"
+
+# Load options
+zsh_add_file "zsh-config/zsh-options"
 
 # Normal files to source
 zsh_add_file "zsh-config/zsh-exports"
@@ -75,6 +74,6 @@ zsh_add_file "zsh-config/zsh-loadextras"
 zsh_add_file "zsh-config/zsh-prompt"
 
 # Load custom zsh config post-prompt
-if [ -f "$ZDOTDIR_LOCAL/zsh-custom" ]; then
-    zsh_add_file "$ZDOTDIR_LOCAL/zsh-custom"
+if [ -f "$ZDOTDIR/zsh-custom" ]; then
+    zsh_add_file "$ZDOTDIR/zsh-custom"
 fi
