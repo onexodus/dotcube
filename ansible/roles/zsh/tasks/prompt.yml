@@ -7,7 +7,7 @@
   when: ansible_os_family == 'Debian'
 
 - name: "ZSH | LINUX | Check if fzf is installed"
-  ansible.builtin.command: "fzf --version"
+  ansible.builtin.command: "{{ ansible_user_dir }}/.config/zsh/plugins/fzf/bin/fzf --version"
   register: fzf_installed
   ignore_errors: true
   changed_when: false
