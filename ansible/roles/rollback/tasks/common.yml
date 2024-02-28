@@ -13,24 +13,28 @@
   stat:
     path: "{{ ansible_user_dir }}/.zshrc.bak"
   register: zshrc_bak
-  when: original_shell.stdout == "/bin/zsh"
+  when: original_shell.stdout == "/bin/zsh" and dotcube_run.stat.exists
+  ignore_errors: true
 
 - name: ROLLBACK | Restore .zshrc backup
   shell: cp -f "{{ ansible_user_dir }}/.zshrc.bak }}" "{{ ansible_user_dir }}/.zshrc"
   when: original_shell.stdout == "/bin/zsh" and zshrc_bak.stat.exists
+  ignore_errors: true
 
 - name: ROLLBACK | Removing custom .zshrc
   file:
     path: "{{ ansible_user_dir }}/.zshrc"
     state: absent
   when: original_shell.stdout == "/bin/zsh" and not zshrc_bak.stat.exists
+  ignore_errors: true
 
 - name: ROLLBACK | Change shell to original
   user:
     name: "{{ host_user }}"
     shell: "{{ original_shell.stdout}}"
   become: true
-  when: original_shell.stdout != "/bin/zsh"
+  when: original_shell.stdout != "/bin/zsh" and dotcube_run.stat.exists
+  ignore_errors: true
 
 - name: ROLLBACK | Remove run file
   file:
