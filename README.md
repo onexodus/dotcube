@@ -29,7 +29,11 @@ Custom ZSH terminal configuration, currently supporting the following features:
 
 
 ### Installation and initial provisioning
-Just copy-paste the following command in the terminal:
+Install `Hack Nerd Font` on your system:
+
+    https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/Hack.zip
+
+Run the following command in the terminal:
 
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/onexodus/dotcube/main/bin/dotcube)"
 
