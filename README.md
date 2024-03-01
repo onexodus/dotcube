@@ -35,7 +35,7 @@ Install `Hack Nerd Font` on your system:
 
 Run the following command in the terminal:
 
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/onexodus/dotcube/main/bin/dotcube)"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/onexodus/dotcube/main/bin/dotcube)"
 
 
 
