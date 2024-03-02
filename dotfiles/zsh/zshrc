@@ -75,5 +75,5 @@ zsh_add_file "zsh-config/zsh-prompt"
 
 # Load custom zsh config post-prompt
 if [ -f "$ZDOTDIR/zsh-custom" ]; then
-    zsh_add_file "$ZDOTDIR/zsh-custom"
+    zsh_add_file_local "zsh-custom"
 fi
