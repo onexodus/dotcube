@@ -1,8 +1,13 @@
 ---
+- name: SYSTEM | Register if provisioned
+  stat:
+    path: "{{ ansible_user_dir }}/.dotcube.run"
+  register: dotcube_run
+
 - name: Run Ubuntu Tasks
   ansible.builtin.import_tasks: ubuntu.yml
-  when: ansible_os_family == 'Debian'
+  when: ansible_os_family == 'Debian' and dotcube_run.stat.exists == false
 
 - name: Run OSX Tasks
   ansible.builtin.import_tasks: osx.yml
-  when: ansible_os_family == 'Darwin'
+  when: ansible_os_family == 'Darwin' and dotcube_run.stat.exists == false
