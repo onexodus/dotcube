@@ -15,7 +15,7 @@
 
 - name: "ZSH | LINUX | Install fzf"
   ansible.builtin.shell: "bash -f {{ ansible_user_dir }}/.config/zsh/plugins/fzf/install --bin"
-  when: (fzf_installed.rc != 0) and (ansible_os_family == 'Debian')
+  when: (ansible_os_family == 'Debian') and (fzf_installed.rc != 0)
 
 - name: "ZSH | OSX | Install fzf"
   community.general.homebrew:
@@ -47,7 +47,7 @@
 - name: "ZSH | LINUX | Install starship"
   ansible.builtin.shell: "curl -fsSL https://starship.rs/install.sh | sh -s -- -y"
   become: true
-  when: (starship_installed.rc != 0) and (ansible_os_family == 'Debian')
+  when: (ansible_os_family == 'Debian') and (starship_installed.rc != 0)
   ignore_errors: true
   changed_when: false
 
