@@ -51,7 +51,7 @@ As `dotcube` is ultimatelly triggering the run of an ansible-playbook command, i
 All the roles in the ansible folder can be deployed using tags option `-t` and specifying the role name like in the following example:
     dotcube -t netops
 
-By default, running the script will provision only the default `system` and `zsh` roles.
+By default, running the script will provision only the default `system` and `zsh` roles when running for the first time then only the `zsh` role will be reprovisioned.
 
 
 
