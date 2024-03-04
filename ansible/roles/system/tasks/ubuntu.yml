@@ -3,6 +3,7 @@
   ansible.builtin.apt:
     update_cache: yes
   become: true
+  ignore_errors: true
 
 - name: "SYSTEM | LINUX | Install base packages"
   ansible.builtin.apt:
