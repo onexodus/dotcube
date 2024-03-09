@@ -99,7 +99,7 @@ if ! command -v git >/dev/null 2>&1; then
         brew install git
         ;;
     Linux)
-        # _cmd "sudo apt update"
+        _cmd "sudo apt update"
         _cmd "sudo apt install -y git"
         ;;
     esac
@@ -124,6 +124,7 @@ if ! command -v pip3 >/dev/null 2>&1; then
     _task "Installing pip3"
     case "$(uname -s)" in
     Linux)
+        _cmd "sudo apt update"
         _cmd "sudo apt install -y python3-pip"
         ;;
     esac
