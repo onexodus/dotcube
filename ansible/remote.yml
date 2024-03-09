@@ -2,6 +2,7 @@
 - name: DotCube Remote Provisioning
   hosts: all
   vars:
+    ansible_python_interpreter: /usr/bin/python3
     called_from: "remote"
 
   pre_tasks:
