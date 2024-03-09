@@ -45,16 +45,19 @@ if [[ " $@ " =~ " -t " ]]; then
         rollback)
             echo -e ""
             echo -e "${CHECK_MARK} ${CYAN}dotcube: Rollback complete!${NC}"
+            exit 0
             ;;
         remove)
             echo -e ""
             echo -e "${CHECK_MARK} ${CYAN}dotcube: Remove complete!${NC}"
+            exit 0
             ;;
         *)
             if ! ssh "$target_value" test -f "\$HOME/.dotcube.run"; then
                 echo -e ""
                 echo -e "${CHECK_MARK} ${CYAN}Initial provisioning - dotcube: Bootstrap complete!${NC}"
                 ssh "$target_value" touch "\$HOME/.dotcube.run"
+                exit 0
             fi
             ;;
     esac

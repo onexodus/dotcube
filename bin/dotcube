@@ -234,9 +234,11 @@ if [[ -z "$DOTCUBE_REMOTE_TRIGGER" ]]; then
                     echo -e ""
                     echo -e "${CHECK_MARK} ${CYAN}Initial provisioning - dotcube: Bootstrap complete!${NC}"
                     touch "$IS_FIRST_RUN"
+                    exit 0
                 else
                     echo -e ""
                     echo -e "${CHECK_MARK} ${CYAN}dotcube: Bootstrap complete!${NC}"
+                    exit 0
                 fi
                 ;;
         esac
