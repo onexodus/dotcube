@@ -64,6 +64,7 @@
     global: yes
   become: true
   when: ansible_os_family == 'Debian'
+  ignore_errors: true
 
 - name: "ZSH | OSX | Install pure-prompt via brew"
   community.general.homebrew:
