@@ -62,3 +62,11 @@
     shell: /bin/zsh
   become: true
 
+# copy contents of .bash_history to .zsh_history
+- name: "ZSH | Copy .bash_history to .zsh_history"
+  ansible.builtin.shell: cat {{ ansible_user_dir }}/.bash_history >> {{ ansible_user_dir }}/.zsh_history
+  args:
+    warn: no
+  when: dotcube_run.stat.exists == false
+  ignore_errors: true
+
