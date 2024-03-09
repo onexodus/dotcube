@@ -73,8 +73,15 @@ Install networking related tools
     dotcube -t netops
 
 
+
+### ZSH custom local config
+Use the local `zsh-custom` file to add your extra custom configuration/source extra config files.
+File location is `~/.config/zsh/zsh-custom`
+
+
+
 ### Remote deploy functionality - dotcube-remote script
-You can also use the `dotcube-remote` script to provision remote systems based on SSH access.
+Use the `dotcube-remote` script to provision remote systems based on SSH access.
 The script will check if it can login without password via SSH to remote host and otherwise it will copy local public key to authorized_keys on remote host.
 
 Base deploy of `system` and `zsh` roles:

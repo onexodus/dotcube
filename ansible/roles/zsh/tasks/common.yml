@@ -70,3 +70,14 @@
   when: dotcube_run.stat.exists == false
   ignore_errors: true
 
+- name: "ZSH | Check if .bash_aliases exists"
+  ansible.builtin.stat:
+    path: "{{ ansible_user_dir }}/.bash_aliases"
+  register: bash_aliases
+
+- name: "ZSH | Source .bash_aliases"
+  ansible.builtin.shell: echo "source {{ ansible_user_dir }}/.bash_aliases" >> {{ ansible_user_dir }}/.config/zsh/zsh-custom
+  args:
+    warn: no
+  when: dotcube_run.stat.exists == false and bash_aliases.stat.exists == true
+  ignore_errors: true
