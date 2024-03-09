@@ -216,28 +216,18 @@ fi
 popd > /dev/null 2>&1 # return to previous directory
 
 if [[ -z "$DOTCUBE_REMOTE_TRIGGER" ]]; then
-    if ! [[ -f "$IS_FIRST_RUN" ]]; then
-        echo -e ""
-        echo -e "${CHECK_MARK} ${CYAN}Initial provisioning - dotcube: Bootstrap complete!${NC}"
-        echo -e "${ARROW} ${CYAN}Please reload the terminal to complete the setup.${NC}"
-        touch "$IS_FIRST_RUN"
-    else
-        echo -e ""
-        echo -e "${CHECK_MARK} ${CYAN}dotcube: Bootstrap complete!${NC}"
-    fi
-fi
-
-if [[ -z "$DOTCUBE_REMOTE_TRIGGER" ]]; then
     if [[ " $@ " =~ " -t " ]]; then
         tag_used=$(echo "$@" | sed -n -e 's/^.*-t \([^ ]*\).*$/\1/p')
         case "$tag_used" in
             rollback)
                 echo -e ""
                 echo -e "${CHECK_MARK} ${CYAN}dotcube: Rollback complete!${NC}"
+                exit 0
                 ;;
             remove)
                 echo -e ""
                 echo -e "${CHECK_MARK} ${CYAN}dotcube: Remove complete!${NC}"
+                exit 0
                 ;;
             *)
                 if ! [[ -f "$IS_FIRST_RUN" ]]; then
