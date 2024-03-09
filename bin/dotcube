@@ -91,26 +91,6 @@ IS_FIRST_RUN="$HOME/.dotcube.run"
 # Script start
 echo -e "${CYAN}dotcube: Bootstrap started${NC}"
 
-# Install Ansible
-# check lsb_release -si
-if ! command -v ansible >/dev/null 2>&1; then
-    _task "Installing Ansible"
-    case "$(uname -s)" in
-    Darwin)
-        brew install ansible
-        ;;
-    Linux)
-        _cmd "sudo apt update"
-        _cmd "sudo apt install -y software-properties-common"
-        _cmd "sudo apt-add-repository -y --update ppa:ansible/ansible"
-        _cmd "sudo apt update"
-        _cmd "sudo apt install -y ansible"
-        _cmd "sudo apt install python3-argcomplete"
-        _cmd "sudo activate-global-python-argcomplete3"
-        ;;
-    esac
-fi
-
 # Install git
 if ! command -v git >/dev/null 2>&1; then
     _task "Installing Git"
@@ -124,7 +104,6 @@ if ! command -v git >/dev/null 2>&1; then
         ;;
     esac
 fi
-
 
 # Install python3 and pip
 if ! command -v python3 >/dev/null 2>&1; then
@@ -154,6 +133,33 @@ fi
 if ! pip3 list | grep watchdog >/dev/null 2>&1; then
     _task "Installing Python3 Watchdog"
         _cmd "pip3 install watchdog"
+fi
+
+# Install Ansible
+# check lsb_release -si
+if ! command -v ansible >/dev/null 2>&1; then
+    _task "Installing Ansible"
+    case "$(uname -s)" in
+    Darwin)
+        brew install ansible
+        ;;
+    Linux)
+        case "$(lsb_release -r | cut -d":" -f2 | xargs)" in
+        18.04)
+            pip3 install --upgrade pip
+            pip3 install ansible
+            ;;
+        *)
+            _cmd "sudo apt update"
+            _cmd "sudo apt install -y software-properties-common"
+            _cmd "sudo apt-add-repository -y --update ppa:ansible/ansible"
+            _cmd "sudo apt update"
+            _cmd "sudo apt install -y ansible"
+            _cmd "sudo apt install python3-argcomplete"
+            _cmd "sudo activate-global-python-argcomplete3"
+            ;;
+        esac
+    esac
 fi
 
 # Creating SSH folder
