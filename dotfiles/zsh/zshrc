@@ -50,19 +50,21 @@ zsh_add_plugin "junegunn/fzf" "shell/*.zsh"
 
 zsh_add_completion "zsh-users/zsh-completions/src" true
 
-# Key-bindings
+# OS specific settings
 case "$(uname -s)" in
 
 Linux)
-    # echo 'Linux'
+    # key bindings for history search
     bindkey '^[[A' history-substring-search-up
     bindkey '^[[B' history-substring-search-down
 	;;
 
 Darwin)
-	# echo 'Mac OS X'
+	# key bindings for history search
     bindkey '^[[A' history-substring-search-up
     bindkey '^[[B' history-substring-search-down
+    # Load OSX specific settings
+    zsh_add_file "zsh-config/zsh-osx"
 	;;
 
 esac

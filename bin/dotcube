@@ -103,6 +103,15 @@ IS_FIRST_RUN="$HOME/.dotcube.run"
 # Script start
 echo -e "${CYAN}dotcube: Bootstrap started${NC}"
 
+# if uname -s is Darwin check if brew installed otherwise install it
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    if ! command -v brew >/dev/null 2>&1; then
+        _task "Installing Homebrew"
+        _cmd '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+    fi
+    _cmd "eval $(/opt/homebrew/bin/brew shellenv)"
+fi
+
 # Install git
 if ! command -v git >/dev/null 2>&1; then
     _task "Installing Git"
