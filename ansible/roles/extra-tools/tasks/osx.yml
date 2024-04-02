@@ -1,0 +1,6 @@
+---
+- name: "EXTRA-TOOLS | OSX | Install extra Homebrew packages"
+  community.general.homebrew:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ extra_packages }}"

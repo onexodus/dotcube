@@ -1,0 +1,14 @@
+---
+- name: "EXTRA-TOOLS | LINUX | Update apt cache"
+  ansible.builtin.apt:
+    update_cache: yes
+  become: true
+  ignore_errors: true
+
+- name: "EXTRA-TOOLS | LINUX | Install extra packages"
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: present
+  become: true
+  loop: "{{ extra_packages }}"
