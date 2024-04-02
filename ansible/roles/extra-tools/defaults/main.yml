@@ -1,4 +1,4 @@
-extra-osx-packages:
+extra_osx_packages:
   - lsd
   - gh
   - git-crypt
@@ -7,7 +7,7 @@ extra-osx-packages:
   - btop
   - watch  
 
-extra-linux-packages:
+extra_linux_packages:
   - gh
   - git-crypt
   - jq
