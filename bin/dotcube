@@ -79,6 +79,18 @@ function _task_done {
     _clear_task
 }
 
+function _check_first_run {
+    if ! [[ -f "$IS_FIRST_RUN" ]]; then
+        echo -e ""
+        echo -e "${CHECK_MARK} ${CYAN}Initial provisioning - dotcube: Bootstrap complete!${NC}"
+        touch "$IS_FIRST_RUN"
+        exit 0
+    else
+        echo -e ""
+        echo -e "${CHECK_MARK} ${CYAN}dotcube: Bootstrap complete!${NC}"
+        exit 0
+    fi
+}
 
 set -e
 
@@ -230,18 +242,11 @@ if [[ -z "$DOTCUBE_REMOTE_TRIGGER" ]]; then
                 exit 0
                 ;;
             *)
-                if ! [[ -f "$IS_FIRST_RUN" ]]; then
-                    echo -e ""
-                    echo -e "${CHECK_MARK} ${CYAN}Initial provisioning - dotcube: Bootstrap complete!${NC}"
-                    touch "$IS_FIRST_RUN"
-                    exit 0
-                else
-                    echo -e ""
-                    echo -e "${CHECK_MARK} ${CYAN}dotcube: Bootstrap complete!${NC}"
-                    exit 0
-                fi
+                _check_first_run
                 ;;
         esac
+    else
+        _check_first_run
     fi
 fi
 # End of script

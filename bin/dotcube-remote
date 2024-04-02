@@ -1,6 +1,19 @@
 #!/bin/bash
 set -e
 
+function _check_remote_first_run {
+    if ! ssh "$target_value" test -f "\$HOME/.dotcube.run"; then
+        echo -e ""
+        echo -e "${CHECK_MARK} ${CYAN}Initial provisioning - dotcube-remote: Bootstrap complete!${NC}"
+        ssh "$target_value" touch "\$HOME/.dotcube.run"
+        exit 0
+    else
+        echo -e ""
+        echo -e "${CHECK_MARK} ${CYAN}dotcube-remote: Bootstrap complete!${NC}"
+        exit 0
+    fi
+}
+
 # check if first parameter exists
 if [ -z "$1" ]; then
     echo "Usage: dotcube-remote <remote-host> [ansible-playbook-args]"
@@ -44,21 +57,18 @@ if [[ " $@ " =~ " -t " ]]; then
     case "$tag_used" in
         rollback)
             echo -e ""
-            echo -e "${CHECK_MARK} ${CYAN}dotcube: Rollback complete!${NC}"
+            echo -e "${CHECK_MARK} ${CYAN}dotcube-remote: Rollback complete!${NC}"
             exit 0
             ;;
         remove)
             echo -e ""
-            echo -e "${CHECK_MARK} ${CYAN}dotcube: Remove complete!${NC}"
+            echo -e "${CHECK_MARK} ${CYAN}dotcube-remote: Remove complete!${NC}"
             exit 0
             ;;
         *)
-            if ! ssh "$target_value" test -f "\$HOME/.dotcube.run"; then
-                echo -e ""
-                echo -e "${CHECK_MARK} ${CYAN}Initial provisioning - dotcube: Bootstrap complete!${NC}"
-                ssh "$target_value" touch "\$HOME/.dotcube.run"
-                exit 0
-            fi
+            _check_remote_first_run
             ;;
     esac
+else
+    _check_remote_first_run
 fi
