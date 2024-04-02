@@ -48,9 +48,22 @@ fi
 # Shift the positional parameters to exclude $1
 shift
 
+# account for username passed in as an argument
+ssh_target_construct=""
+if [[ " $@ " =~ " -u " ]]; then
+    username=$(echo "$@" | sed -n -e 's/^.*-u \([^ ]*\).*$/\1/p')
+    ssh_target_construct="$username@$1"
+else
+    ssh_target_construct="$1"
+fi
+
 DOTFILES_HOME="$HOME/.dotcube"
 export DOTCUBE_REMOTE_TRIGGER=true
-"$DOTFILES_HOME"/bin/dotcube -i "$target" "$@"
+if ssh "$ssh_target_construct" sudo -n true 2>/dev/null; then
+    "$DOTFILES_HOME"/bin/dotcube -i "$target" "$@"
+else
+    "$DOTFILES_HOME"/bin/dotcube -i "$target" --ask-become-pass "$@"
+fi
 
 if [[ " $@ " =~ " -t " ]]; then
     tag_used=$(echo "$@" | sed -n -e 's/^.*-t \([^ ]*\).*$/\1/p')
