@@ -10,4 +10,4 @@
     update_cache: yes
     state: present
   become: true
-  loop: "{{ network_packages }}"
+  loop: "{{ network_packages_linux }}"

@@ -1,0 +1,6 @@
+---
+- name: "NET-OPS | OSX | Install net-ops Homebrew packages"
+  community.general.homebrew:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ network_packages_osx }}"

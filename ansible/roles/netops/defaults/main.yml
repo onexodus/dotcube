@@ -1,4 +1,4 @@
-network_packages:
+network_packages_linux:
   - net-tools
   - nmap
   - traceroute
@@ -19,3 +19,13 @@ network_packages:
   - ipcalc
   - iperf3
   - iftop
+  - fping
+
+network_packages_osx:
+  - ipcalc
+  - iperf
+  - iperf3
+  - mtr
+  - telnet
+  - nmap
+  - fping
