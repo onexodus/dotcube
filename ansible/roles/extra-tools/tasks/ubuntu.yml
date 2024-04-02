@@ -11,4 +11,4 @@
     update_cache: yes
     state: present
   become: true
-  loop: "{{ extra_packages }}"
+  loop: "{{ extra_linux_packages }}"

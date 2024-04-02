@@ -3,4 +3,4 @@
   community.general.homebrew:
     name: "{{ item }}"
     state: present
-  loop: "{{ extra_packages }}"
+  loop: "{{ extra_osx_packages }}"

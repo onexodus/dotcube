@@ -1,2 +1,5 @@
-extra-packages:
+extra-osx-packages:
+  - gh
+
+extra-linux-packages:
   - gh
