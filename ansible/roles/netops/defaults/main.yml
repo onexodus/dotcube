@@ -29,3 +29,9 @@ network_packages_osx:
   - telnet
   - nmap
   - fping
+  - netcat
+  - ngrep
+  - wget
+  - httpie
+  - iftop
+  - socat
