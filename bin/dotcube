@@ -92,6 +92,12 @@ function _check_first_run {
     fi
 }
 
+function _clean_logs {
+    if [[ -f "$DOTFILES_LOG" ]]; then
+        rm -f "$DOTFILES_LOG"
+    fi
+}
+
 set -e
 
 # Paths
@@ -266,10 +272,12 @@ if [[ -z "$DOTCUBE_REMOTE_TRIGGER" ]]; then
                 exit 0
                 ;;
             *)
+                _clean_logs
                 _check_first_run
                 ;;
         esac
     else
+        _clean_logs
         _check_first_run
     fi
 fi
