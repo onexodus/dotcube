@@ -104,7 +104,7 @@ set -e
 DOTFILES_HOME="$HOME/.dotcube"
 VAULT_SECRET="$HOME/.ansible-vault/vault.secret"
 SSH_FOLDER="$HOME/.ssh"
-IS_FIRST_RUN="$HOME/.dotcube.run"
+IS_FIRST_RUN="$HOME/.config/.dotcube.run"
 
 # Script start
 echo -e "${CYAN}dotcube: Bootstrap started${NC}"

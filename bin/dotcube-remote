@@ -2,10 +2,10 @@
 set -e
 
 function _check_remote_first_run {
-    if ! ssh "$target_value" test -f "\$HOME/.dotcube.run"; then
+    if ! ssh "$target_value" test -f "\$HOME/.config/.dotcube.run"; then
         echo -e ""
         echo -e "${CHECK_MARK} ${CYAN}Initial provisioning - dotcube-remote: Bootstrap complete!${NC}"
-        ssh "$target_value" touch "\$HOME/.dotcube.run"
+        ssh "$target_value" touch "\$HOME/.config/.dotcube.run"
         exit 0
     else
         echo -e ""
