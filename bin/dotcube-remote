@@ -1,4 +1,23 @@
 #!/bin/bash
+#
+# dotcube-remote
+# --------------
+# This script is used to run dotcube on a remote host.
+# It copies the SSH keys to the remote host and then runs dotcube on the remote host.
+# It implicitly assumes you have a SSH key pair generated localy using ed25519 algorithm: id_ed25519.pub
+#
+# Usage: dotcube-remote <remote-host> [ansible-playbook-args]
+# [ansible-playbook-args] are passed directly to ansible-playbook
+#
+# Use -t to specify the target role to run
+# Example: dotcube-remote <remote-host> -t zsh
+#
+# Use -u to specify the username to use when connecting to the remote host
+# Example: dotcube-remote <remote-host> -u username
+#
+# For more information, see the documentation in README.md
+#
+
 set -e
 
 function _check_remote_first_run {
