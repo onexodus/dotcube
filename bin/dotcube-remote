@@ -36,7 +36,7 @@ fi
 if ! ssh -o "BatchMode yes" -o "ConnectTimeout 5" "$1" true; then
     echo "Copying ssh keys to $1 - please enter your password when prompted"
     if [[ "$target_type" == "host" ]]; then
-        if [[ " $@ " =~ " -u " ]]; then
+        if [[ " $* " =~ " -u " ]]; then
             username=$(echo "$@" | sed -n -e 's/^.*-u \([^ ]*\).*$/\1/p')
             ssh-copy-id -i "$HOME/.ssh/id_ed25519.pub" "$username@$1"
         else
@@ -45,27 +45,33 @@ if ! ssh -o "BatchMode yes" -o "ConnectTimeout 5" "$1" true; then
     fi
 fi
 
+# account for username passed in as an argument
+if [[ "$target_type" == "host" ]]; then
+    ssh_target_construct=""
+    if [[ " $* " =~ " -u " ]]; then
+        username=$(echo "$@" | sed -n -e 's/^.*-u \([^ ]*\).*$/\1/p')
+        ssh_target_construct="$username@$1"
+    else
+        ssh_target_construct="$1"
+    fi
+fi
+
 # Shift the positional parameters to exclude $1
 shift
 
-# account for username passed in as an argument
-ssh_target_construct=""
-if [[ " $@ " =~ " -u " ]]; then
-    username=$(echo "$@" | sed -n -e 's/^.*-u \([^ ]*\).*$/\1/p')
-    ssh_target_construct="$username@$1"
-else
-    ssh_target_construct="$1"
-fi
-
 DOTFILES_HOME="$HOME/.dotcube"
 export DOTCUBE_REMOTE_TRIGGER=true
-if ssh "$ssh_target_construct" sudo -n true 2>/dev/null; then
-    "$DOTFILES_HOME"/bin/dotcube -i "$target" "$@"
+if [[ "$target_type" == "host" ]]; then
+    if ssh "$ssh_target_construct" sudo -n true; then
+        "$DOTFILES_HOME"/bin/dotcube -i "$target" "$@"
+    else
+        "$DOTFILES_HOME"/bin/dotcube -i "$target" --ask-become-pass "$@"
+    fi
 else
     "$DOTFILES_HOME"/bin/dotcube -i "$target" --ask-become-pass "$@"
 fi
 
-if [[ " $@ " =~ " -t " ]]; then
+if [[ " $* " =~ " -t " ]]; then
     tag_used=$(echo "$@" | sed -n -e 's/^.*-t \([^ ]*\).*$/\1/p')
     case "$tag_used" in
         rollback)
