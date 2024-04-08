@@ -1,5 +1,12 @@
 #!/bin/bash
 set -e
+
+# For logging purposes
+START_TIME=$(date +%s)
+START_DATE=$(date)
+RUNCMD="$(basename $0) $@"
+RUN_STATUS="SUCCESS"
+
 # color codes
 RESTORE='\033[0m'
 NC='\033[0m'
@@ -47,6 +54,15 @@ function _task {
     printf "${LBLACK} [ ]  ${TASK} \n${LRED}"
 }
 
+function _clear_task {
+    TASK=""
+}
+
+function _task_done {
+    printf "${OVERWRITE}${LGREEN} [✓]  ${LGREEN}${TASK}\n"
+    _clear_task
+}
+
 # _cmd performs commands with error checking
 function _cmd {
     #create log if it doesn't exist
@@ -64,32 +80,10 @@ function _cmd {
         printf "      ${line}\n"
     done < "$DOTFILES_LOG"
     printf "\n"
-    # remove log file
-    # rm "$DOTFILES_LOG"
-    # exit installation
+    
+    RUN_STATUS="FAILED"
+    _write_run_log
     exit 1
-}
-
-function _clear_task {
-    TASK=""
-}
-
-function _task_done {
-    printf "${OVERWRITE}${LGREEN} [✓]  ${LGREEN}${TASK}\n"
-    _clear_task
-}
-
-function _check_first_run {
-    if ! [[ -f "$IS_FIRST_RUN" ]]; then
-        echo -e ""
-        echo -e "${CHECK_MARK} ${CYAN}Initial provisioning - dotcube: Bootstrap complete!${NC}"
-        touch "$IS_FIRST_RUN"
-        exit 0
-    else
-        echo -e ""
-        echo -e "${CHECK_MARK} ${CYAN}dotcube: Bootstrap complete!${NC}"
-        exit 0
-    fi
 }
 
 function _clean_logs {
@@ -98,7 +92,29 @@ function _clean_logs {
     fi
 }
 
-set -e
+function _check_first_run {
+    if ! [[ -f "$IS_FIRST_RUN" ]]; then
+        echo -e ""
+        echo -e "${CHECK_MARK} ${CYAN}Initial provisioning - dotcube: Bootstrap complete!${NC}"
+        touch "$IS_FIRST_RUN"
+    else
+        echo -e ""
+        echo -e "${CHECK_MARK} ${CYAN}dotcube: Bootstrap complete!${NC}"
+    fi
+}
+
+function _write_run_log {
+    END_TIME=$(date +%s)
+    RUNTIME=$((END_TIME - START_TIME))
+    echo -e "$START_DATE | CMD: $RUNCMD | STATUS: $RUN_STATUS | RUNTIME: $RUNTIME seconds" >>$IS_FIRST_RUN
+}
+
+function _end_tasks {
+    _clean_logs
+    _check_first_run
+    _write_run_log
+    exit 0
+}
 
 # Paths
 DOTFILES_HOME="$HOME/.dotcube"
@@ -109,7 +125,7 @@ IS_FIRST_RUN="$HOME/.config/.dotcube.run"
 # Script start
 echo -e "${CYAN}dotcube: Bootstrap started${NC}"
 
-# if uname -s is Darwin check if brew installed otherwise install it
+# Install brew on macOS
 if [[ "$(uname -s)" == "Darwin" ]]; then
     if ! command -v brew >/dev/null 2>&1; then
         _task "Installing Homebrew"
@@ -233,6 +249,8 @@ _task "Running playbook"; _task_done
 # fi
 
 # Run playbook
+set +e # disable exit on error
+
 if [[ -f $VAULT_SECRET ]]; then
     if [[ -n "$DOTCUBE_REMOTE_TRIGGER" ]]; then
         ansible-playbook --vault-password-file "$VAULT_SECRET" "$DOTFILES_HOME/ansible/remote.yml" "$@"
@@ -255,6 +273,14 @@ else
     fi
 fi
 
+exit_status=$?
+if [[ $exit_status -ne 0 ]]; then
+    echo -e "${X_MARK} ${RED}dotcube: Ansible playbook failed!${NC}"
+    RUN_STATUS="FAILED"
+    _write_run_log
+    exit 1
+fi
+
 popd > /dev/null 2>&1 # return to previous directory
 
 if [[ -z "$DOTCUBE_REMOTE_TRIGGER" ]]; then
@@ -264,21 +290,21 @@ if [[ -z "$DOTCUBE_REMOTE_TRIGGER" ]]; then
             rollback)
                 echo -e ""
                 echo -e "${CHECK_MARK} ${CYAN}dotcube: Rollback complete!${NC}"
+                _write_run_log
                 exit 0
                 ;;
             remove)
                 echo -e ""
                 echo -e "${CHECK_MARK} ${CYAN}dotcube: Remove complete!${NC}"
+                _write_run_log
                 exit 0
                 ;;
             *)
-                _clean_logs
-                _check_first_run
+                _end_tasks
                 ;;
         esac
     else
-        _clean_logs
-        _check_first_run
+        _end_tasks
     fi
 fi
 # End of script
