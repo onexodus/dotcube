@@ -1,0 +1,105 @@
+#!/bin/bash
+#
+# dotcube-custom
+# --------------
+# This script is used to deploy dotcube-custom repository for a specific machine.
+#
+
+set -e
+
+NC='\033[0m'
+LGREEN='\033[01;32m'
+CYAN='\033[00;36m'
+LRED='\033[01;31m'
+LYELLOW='\033[01;33m'
+
+function _are_you_sure {
+    printf "${LYELLOW}"
+    read -r -p "Are you sure you want to continue? [y/N] " response
+    printf "${NC}"
+    case "$response" in
+        [yY][eE][sS]|[yY])
+            ;;
+        *)
+            printf "${LRED}Aborted${NC}\n"
+            exit 1
+            ;;
+    esac
+}
+
+# if $1 is "edit" then open the config in the default editor
+if [ "$1" == "edit" ]; then
+    if [ ! -f ~/.config/dotcube-custom ]; then
+        echo "export CUSTOM_REPO=" > ~/.config/dotcube-custom
+        echo "export BOX=" >> ~/.config/dotcube-custom
+    fi
+    nano ~/.config/dotcube-custom
+    exit 0
+fi
+
+# check if $1 is a valid IP address
+if [[ "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    IP_ADDRESS=$1
+    shift
+fi
+
+if [ ! -f ~/.config/dotcube-custom ]; then
+    printf "Generating configuration file ${LGREEN}~/.config/dotcube-custom${NC}\n"
+    read -r -p "Enter the custom repository URL: " CUSTOM_REPO
+    echo "export CUSTOM_REPO=$CUSTOM_REPO" > ~/.config/dotcube-custom
+    read -r -p "Enter the box name: " BOX
+    echo "export BOX=$BOX" >> ~/.config/dotcube-custom
+else
+    source $HOME/.config/dotcube-custom
+    printf "dotcube-custom configuration file found at ${LGREEN}~/.config/dotcube-custom${NC}\n"
+    echo "Using the following configuration:"
+    echo ""
+    printf "Custom repository: ${LGREEN}$CUSTOM_REPO${NC}\n"
+    # check if IP_ADDRESS is not set
+    if [ -z "$IP_ADDRESS" ]; then
+        printf "Box: ${LGREEN}$BOX${NC}\n"
+    else
+        printf "${CYAN}Using box name from command line instead of configuration file${NC}\n"
+    fi
+    echo ""
+fi
+
+# check if variables are set
+if [ -z "$CUSTOM_REPO" ] || [ -z "$BOX" ]; then
+    printf "${RED}Error: Configuration file is missing required variables.${NC}\n"
+    printf "Please run ${LGREEN}dotcube-custom edit${NC} to edit the configuration file.\n"
+    exit 1
+fi
+
+# check if repo variable is a valid git repository
+if ! git ls-remote "$CUSTOM_REPO" &> /dev/null; then
+    printf "${LRED}Error: \"$CUSTOM_REPO\" is not a valid git repository.${NC}\n"
+    printf "Please run ${LGREEN}dotcube-custom edit${NC} to edit the configuration file.\n"
+    exit 1
+fi
+
+set +e
+
+if [ -n "$IP_ADDRESS" ]; then
+    if [[ -z "$1" ]]; then
+        printf "${LRED}Error: No box provided for deployment${NC}\n"
+        printf "Usage: dotcube-custom ${LGREEN}<IP_ADDRESS> <BOX_NAME> ${CYAN}<OPTIONAL_ARGS>${NC}\n"
+        exit 1
+    else
+        BOX=$1
+        shift
+    fi
+    printf "Deploying dotcube-custom remotely to \"${LGREEN}$IP_ADDRESS${NC}\" using box \"${LGREEN}$BOX${NC}\"\n"
+    _are_you_sure
+    dotcube-remote "$IP_ADDRESS" -t custom $*
+else
+    _are_you_sure
+    dotcube -t custom $*
+fi
+
+# check if dotcube failed
+exit_code=$?
+if [ $exit_code -ne 0 ]; then
+    printf "${LRED}Error: dotcube-custom failed${NC}\n"
+    exit 1
+fi

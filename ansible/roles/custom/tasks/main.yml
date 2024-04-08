@@ -1,0 +1,82 @@
+---
+- name: CUSTOM | Clone the git repository
+  git:
+    repo: "{{ ansible_env.CUSTOMREPO }}"
+    dest: "{{ ansible_env.HOME }}/.dotcube-custom"
+    update: yes
+    force: yes
+  become: false
+  tags: custom
+  when: ansible_env.CUSTOMREPO is defined
+
+- name: CUSTOM | Assign BOX variable
+  set_fact:
+    box: "{{ ansible_env.BOX }}"
+  tags: custom
+  when: ansible_env.BOX is defined
+
+- name: CUSTOM | Check if BOX folder exists
+  stat:
+    path: "{{ ansible_env.HOME }}/.dotcube-custom/{{ box }}"
+  register: box_folder
+  tags: custom
+  when: box is defined
+
+# Fail if box is not defined or does not exist
+- name: CUSTOM | Failsafe for BOX variable and folder
+  fail:
+    msg: "BOX environment variable is not defined or BOX folder does not exist in custom repository."
+  when: box is not defined or not box_folder.stat.exists
+  tags: custom
+
+# GIT
+- name: CUSTOM | Check git config for {{ box }}
+  stat:
+    path: "{{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/git"
+  register: git_folder
+  tags: custom
+
+- name: CUSTOM | Copy git config files
+  command: cp -r "{{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/git/"* "{{ ansible_env.HOME }}"
+  tags: custom
+  when: git_folder.stat.exists
+
+# ZSH
+- name: CUSTOM | Check zsh config for {{ box }}
+  stat:
+    path: "{{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/zsh"
+  register: zsh_folder
+  tags: custom
+
+- name: CUSTOM | Copy zsh config files
+  command: cp -r "{{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/zsh/"* "{{ ansible_env.HOME }}/.config/zsh/"
+  tags: custom
+  when: zsh_folder.stat.exists
+
+# SCRIPTS
+- name: CUSTOM | Check scripts for {{ box }}
+  stat:
+    path: "{{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/scripts"
+  register: scripts_folder
+  tags: custom
+
+- name: CUSTOM | Copy scripts
+  command: cp -r "{{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/scripts/"* "{{ ansible_env.HOME }}/.scripts/"
+  tags: custom
+  when: scripts_folder.stat.exists
+
+# SSH
+- name: CUSTOM | Check ssh config for {{ box }}
+  stat:
+    path: "{{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/ssh"
+  register: ssh_folder
+  tags: custom
+
+- name: CUSTOM | Copy ssh config files
+  command: cp -r "{{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/ssh/"* "{{ ansible_env.HOME }}/.ssh/"
+  tags: custom
+  when: ssh_folder.stat.exists
+
+- name: CUSTOM | Print README.md for {{ box }}
+  command: cat "{{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/README.md"
+  tags: custom
