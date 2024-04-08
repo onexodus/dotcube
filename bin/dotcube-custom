@@ -75,6 +75,7 @@ fi
 if ! git ls-remote "$CUSTOM_REPO" &> /dev/null; then
     printf "${LRED}Error: \"$CUSTOM_REPO\" is not a valid git repository.${NC}\n"
     printf "Please run ${LGREEN}dotcube-custom edit${NC} to edit the configuration file.\n"
+    printf "Ïf repository is private, make sure you run ${LGREEN}gh auth login${NC} before running dotcube-custom\n"
     exit 1
 fi
 
