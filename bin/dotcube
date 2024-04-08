@@ -270,24 +270,22 @@ else
         ansible-playbook "$DOTFILES_HOME/ansible/remote.yml" "$@"
     else
         if sudo -n true 2>/dev/null; then
-            ansible-playbook "$DOTFILES_HOME/ansible/main.yml" "$@" | tee -a "$DOTCUBE_LOG"
+            ansible-playbook "$DOTFILES_HOME/ansible/main.yml" "$@"
         else
-            ansible-playbook --ask-become-pass "$DOTFILES_HOME/ansible/main.yml" "$@" | tee -a "$DOTCUBE_LOG"
+            ansible-playbook --ask-become-pass "$DOTFILES_HOME/ansible/main.yml" "$@"
         fi
     fi
 fi
 
 exit_status=$?
-if [[ $exit_status -ne 0 ]]; then
-    echo -e "${X_MARK} ${RED}dotcube: Ansible playbook failed!${NC}"
-    RUN_STATUS="FAILED"
-    _write_run_log
-    exit 1
-fi
-
-popd > /dev/null 2>&1 # return to previous directory
 
 if [[ -z "$DOTCUBE_REMOTE_TRIGGER" ]]; then
+    if [[ $exit_status -ne 0 ]]; then
+        echo -e "${X_MARK} ${RED}dotcube: Ansible playbook failed!${NC}"
+        RUN_STATUS="FAILED"
+        _write_run_log
+        exit 1
+    fi
     if [[ " $* " =~ " -t " ]]; then
         tag_used=$(echo "$@" | sed -n -e 's/^.*-t \([^ ]*\).*$/\1/p')
         case "$tag_used" in
@@ -311,4 +309,7 @@ if [[ -z "$DOTCUBE_REMOTE_TRIGGER" ]]; then
         _end_tasks
     fi
 fi
+
+popd > /dev/null 2>&1 # return to previous directory
+
 # End of script
