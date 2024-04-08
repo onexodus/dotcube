@@ -11,6 +11,7 @@ RUN_STATUS="SUCCESS"
 DOTFILES_LOG="$HOME/.dotcube.log"
 DOTCUBE_LOG="$HOME/.config/.dotcube.log"
 
+# logging output to file
 # exec > >(tee "$DOTCUBE_LOG") 2>&1
 
 # color codes
