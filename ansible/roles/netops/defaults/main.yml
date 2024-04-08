@@ -32,6 +32,5 @@ network_packages_osx:
   - netcat
   - ngrep
   - wget
-  - httpie
   - iftop
   - socat
