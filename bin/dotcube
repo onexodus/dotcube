@@ -1,4 +1,19 @@
 #!/bin/bash
+#
+# dotcube
+# -------
+# This script is used to bootstrap the dotcube environment.
+# It installs the required dependencies and runs the Ansible playbook.
+#
+# Usage: dotcube [ansible-playbook-args]
+# [ansible-playbook-args] are passed directly to ansible-playbook
+#
+# Use -t to specify the target role to run
+# Example: dotcube -t zsh
+#
+# For more information, see the documentation in README.md
+#
+
 set -e
 
 # For logging purposes
@@ -180,7 +195,14 @@ fi
 # Install pip module watchdog
 if ! pip3 list | grep watchdog >/dev/null 2>&1; then
     _task "Installing Python3 Watchdog"
+    case "$(uname -s)" in
+    Darwin)
         _cmd "pip3 install watchdog --break-system-packages"
+        ;;
+    Linux)
+        _cmd "pip3 install watchdog"
+        ;;
+    esac
 fi
 
 # Install Ansible
