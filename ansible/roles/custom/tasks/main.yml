@@ -1,32 +1,29 @@
 ---
 - name: CUSTOM | Clone the git repository
   git:
-    repo: "{{ ansible_env.CUSTOMREPO }}"
+    repo: "{{ ansible_env.CUSTOM_REPO }}"
     dest: "{{ ansible_env.HOME }}/.dotcube-custom"
     update: yes
     force: yes
   become: false
   tags: custom
-  when: ansible_env.CUSTOMREPO is defined
 
 - name: CUSTOM | Assign BOX variable
   set_fact:
     box: "{{ ansible_env.BOX }}"
   tags: custom
-  when: ansible_env.BOX is defined
 
 - name: CUSTOM | Check if BOX folder exists
   stat:
     path: "{{ ansible_env.HOME }}/.dotcube-custom/{{ box }}"
   register: box_folder
   tags: custom
-  when: box is defined
 
 # Fail if box is not defined or does not exist
-- name: CUSTOM | Failsafe for BOX variable and folder
+- name: CUSTOM | Failsafe for BOX folder
   fail:
-    msg: "BOX environment variable is not defined or BOX folder does not exist in custom repository."
-  when: box is not defined or not box_folder.stat.exists
+    msg: "BOX folder does not exist in custom repository."
+  when: not box_folder.stat.exists
   tags: custom
 
 # GIT
