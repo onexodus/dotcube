@@ -92,10 +92,10 @@ if [ -n "$IP_ADDRESS" ]; then
     fi
     printf "Deploying dotcube-custom remotely to \"${LGREEN}$IP_ADDRESS${NC}\" using box \"${LGREEN}$BOX${NC}\"\n"
     _are_you_sure
-    dotcube-remote "$IP_ADDRESS" -t custom $*
+    dotcube-remote "$IP_ADDRESS" -t custom -v $*
 else
     _are_you_sure
-    dotcube -t custom $*
+    dotcube -t custom -v $*
 fi
 
 # check if dotcube failed
