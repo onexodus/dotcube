@@ -22,6 +22,10 @@ START_DATE=$(date)
 RUNCMD="$(basename "$0") $*"
 RUN_STATUS="SUCCESS"
 
+if ! [[ -d "$HOME/.config" ]]; then
+    mkdir -p "$HOME/.config"
+fi
+
 # log file
 DOTFILES_LOG="$HOME/.dotcube.log"
 DOTCUBE_LOG="$HOME/.config/.dotcube.log"
