@@ -34,7 +34,7 @@
   tags: custom
 
 - name: CUSTOM | Copy git config files
-  command: cp -r {{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/git/* {{ ansible_env.HOME }}
+  command: cp -r {{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/git/ {{ ansible_env.HOME }}
   tags: custom
   when: git_folder.stat.exists
 
@@ -46,7 +46,7 @@
   tags: custom
 
 - name: CUSTOM | Copy zsh config files
-  command: cp -r {{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/zsh/* {{ ansible_env.HOME }}/.config/zsh/
+  command: cp -r {{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/zsh/ {{ ansible_env.HOME }}/.config/zsh/
   tags: custom
   when: zsh_folder.stat.exists
 
@@ -58,7 +58,7 @@
   tags: custom
 
 - name: CUSTOM | Copy scripts
-  command: cp -r {{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/scripts/* {{ ansible_env.HOME }}/.scripts/
+  command: cp -r {{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/scripts/ {{ ansible_env.HOME }}/.scripts/
   tags: custom
   when: scripts_folder.stat.exists
 
@@ -70,7 +70,7 @@
   tags: custom
 
 - name: CUSTOM | Copy ssh config files
-  command: cp -r {{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/ssh/* {{ ansible_env.HOME }}/.ssh/
+  command: cp -r {{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/ssh/ {{ ansible_env.HOME }}/.ssh/
   tags: custom
   when: ssh_folder.stat.exists
 
