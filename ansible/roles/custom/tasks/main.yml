@@ -51,6 +51,10 @@
   when: zsh_folder.stat.exists
 
 # SCRIPTS
+- name: CUSTOM | Create .scripts folder
+  command: mkdir -p {{ ansible_env.HOME }}/.scripts
+  tags: custom
+
 - name: CUSTOM | Check scripts for {{ box }}
   stat:
     path: "{{ ansible_env.HOME }}/.dotcube-custom/{{ box }}/scripts"
