@@ -27,4 +27,5 @@ node_modules/
 .vagrant
 # exclude all files in ansible/callback_plugins/__pycache__ folder
 ansible/callback_plugins/__pycache__/
-
+# zsh-custom file - meant to be local only
+zsh-custom
