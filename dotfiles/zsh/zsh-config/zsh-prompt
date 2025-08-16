@@ -16,3 +16,5 @@ case $MYPROMPT in
         prompt pure
         ;;
 esac
+
+source <(fzf --zsh)
