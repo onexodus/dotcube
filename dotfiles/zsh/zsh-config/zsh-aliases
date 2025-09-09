@@ -59,6 +59,14 @@ alias iftop='sudo iftop'
 myip() {
 	dig TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'"' '{ print $2}'
 }
+case "$(uname -s)" in
+Darwin)
+	alias flushdns='sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder' # MacOS
+	;;
+Linux)
+	alias flushdns='sudo systemd-resolve --flush-caches'                     # Linux
+	;;
+esac
 
 # Looking Glasses
 alias lgatt='jlogin 12.0.1.28'
