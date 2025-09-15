@@ -204,7 +204,8 @@ if ! pip3 list | grep watchdog >/dev/null 2>&1; then
         _cmd "pip3 install watchdog --break-system-packages"
         ;;
     Linux)
-        _cmd "pip3 install watchdog"
+        # _cmd "pip3 install watchdog"
+        _cmd "sudo apt install -y python3-watchdog"
         ;;
     esac
 fi
