@@ -220,21 +220,31 @@ if ! command -v ansible >/dev/null 2>&1; then
         brew install ansible
         ;;
     Linux)
-        case "$(lsb_release -r | cut -d":" -f2 | xargs)" in
-        18.04)
-            pip3 install --upgrade pip
-            pip3 install ansible
+        case "$(lsb_release -i | cut -d":" -f2 | xargs)" in
+        Ubuntu)
+            case "$(lsb_release -r | cut -d":" -f2 | xargs)" in
+            18.04)
+                pip3 install --upgrade pip
+                pip3 install ansible
+                ;;
+            *)
+                _cmd "sudo apt update"
+                _cmd "sudo apt install -y software-properties-common"
+                _cmd "sudo apt-add-repository -y --update ppa:ansible/ansible"
+                _cmd "sudo apt update"
+                _cmd "sudo apt install -y ansible"
+                _cmd "sudo apt install python3-argcomplete"
+                _cmd "sudo activate-global-python-argcomplete3"
+                ;;
+            esac
             ;;
-        *)
+        Debian)
             _cmd "sudo apt update"
             _cmd "sudo apt install -y software-properties-common"
-            _cmd "sudo apt-add-repository -y --update ppa:ansible/ansible"
-            _cmd "sudo apt update"
-            _cmd "sudo apt install -y ansible"
-            _cmd "sudo apt install python3-argcomplete"
-            _cmd "sudo activate-global-python-argcomplete3"
+            _cmd "apt install -y pipx python3-venv"
+            _cmd "pipx ensurepath"
+            _cmd "pipx install ansible"
             ;;
-        esac
     esac
 fi
 
