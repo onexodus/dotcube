@@ -245,6 +245,7 @@ if ! command -v ansible >/dev/null 2>&1; then
             _cmd "pipx ensurepath"
             _cmd "pipx install ansible"
             ;;
+        esac
     esac
 fi
 
