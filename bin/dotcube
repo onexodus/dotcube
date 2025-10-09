@@ -239,11 +239,9 @@ if ! command -v ansible >/dev/null 2>&1; then
             esac
             ;;
         Debian)
+            _cmd "echo 'deb http://deb.debian.org/debian bookworm-backports main' | sudo tee /etc/apt/sources.list.d/backports.list"
             _cmd "sudo apt update"
-            _cmd "sudo apt install -y software-properties-common"
-            _cmd "sudo apt install -y pipx python3-venv"
-            _cmd "sudo pipx ensurepath"
-            _cmd "sudo pipx install ansible"
+            _cmd "sudo apt install -y ansible-core"
             ;;
         esac
         ;;
