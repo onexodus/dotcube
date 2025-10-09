@@ -241,9 +241,9 @@ if ! command -v ansible >/dev/null 2>&1; then
         Debian)
             _cmd "sudo apt update"
             _cmd "sudo apt install -y software-properties-common"
-            _cmd "apt install -y pipx python3-venv"
-            _cmd "pipx ensurepath"
-            _cmd "pipx install ansible"
+            _cmd "sudo apt install -y pipx python3-venv"
+            _cmd "sudo pipx ensurepath"
+            _cmd "sudo pipx install ansible"
             ;;
         esac
         ;;
