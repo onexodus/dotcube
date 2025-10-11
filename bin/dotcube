@@ -245,7 +245,10 @@ if ! command -v ansible >/dev/null 2>&1; then
             ;;
         Raspbian)
             _cmd "sudo apt update"
-            _cmd "sudo apt install -y ansible"
+            _cmd "sudo apt install -y python3 python3-pip python3-venv ca-certificates curl"
+            _cmd "python3 -m pip install --user --upgrade pipx"
+            _cmd "python3 -m pipx ensurepath"
+            _cmd "pipx install ansible --include-deps"
             ;;
         esac
         ;;
