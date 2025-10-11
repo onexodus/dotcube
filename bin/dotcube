@@ -243,6 +243,10 @@ if ! command -v ansible >/dev/null 2>&1; then
             _cmd "sudo apt update"
             _cmd "sudo apt install -y ansible-core"
             ;;
+        Raspbian)
+            _cmd "sudo apt update"
+            _cmd "sudo apt install -y ansible"
+            ;;
         esac
         ;;
     esac
