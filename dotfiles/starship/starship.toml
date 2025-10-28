@@ -25,7 +25,7 @@ disabled = false
 show_always = true
 
 [hostname]
-ssh_only = true
+ssh_only = false
 format = '[$hostname](bold white) '
 disabled = false
 
