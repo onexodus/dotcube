@@ -35,9 +35,15 @@
         - always
 
   tasks:
+    - name: Normalize run tags
+      ansible.builtin.set_fact:
+        normalized_run_tags: "{{ ansible_run_tags is string | ternary([ansible_run_tags], ansible_run_tags | default([])) }}"
+      tags:
+        - always
+
     - name: Set roles
       ansible.builtin.set_fact:
-        run_roles: "{{ ansible_run_tags != ['all'] and ansible_run_tags or default_roles | difference(exclude_roles | default([])) }}"
+        run_roles: "{{ (normalized_run_tags | length > 0 and 'all' not in normalized_run_tags) | ternary(normalized_run_tags, default_roles | difference(exclude_roles | default([]))) }}"
       tags:
         - always
 
