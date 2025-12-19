@@ -6,5 +6,5 @@ if [ -x "$(command -v github-copilot-cli)" ]; then
 fi
 
 if [ "$NEOFETCH_ENABLED" = true ] && [ -x "$(command -v neofetch)" ]; then
-    neofetch
+    fastfetch
 fi
