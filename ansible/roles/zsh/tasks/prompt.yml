@@ -29,12 +29,62 @@
     state: present
   become: true
   when: ansible_os_family == 'Debian'
+  register: fastfetch_apt
+  ignore_errors: true
+
+- name: "ZSH | LINUX | Set fastfetch OBS distro"
+  ansible.builtin.set_fact:
+    fastfetch_obs_distro: >-
+      {{ 'Debian_' ~ ansible_distribution_major_version
+      if ansible_distribution in ['Debian', 'Raspbian']
+      else 'xUbuntu_' ~ ansible_distribution_version
+      if ansible_distribution == 'Ubuntu'
+      else '' }}
+  when:
+    - ansible_os_family == 'Debian'
+    - fastfetch_apt is failed
+
+- name: "ZSH | LINUX | Add fastfetch OBS apt key"
+  ansible.builtin.apt_key:
+    url: "https://download.opensuse.org/repositories/home:/fastfetch/{{ fastfetch_obs_distro }}/Release.key"
+    state: present
+  become: true
+  when:
+    - ansible_os_family == 'Debian'
+    - fastfetch_apt is failed
+    - fastfetch_obs_distro != ''
+  ignore_errors: true
+
+- name: "ZSH | LINUX | Add fastfetch OBS apt repo"
+  ansible.builtin.apt_repository:
+    repo: "deb https://download.opensuse.org/repositories/home:/fastfetch/{{ fastfetch_obs_distro }}/ /"
+    state: present
+    filename: "fastfetch"
+    update_cache: true
+  become: true
+  when:
+    - ansible_os_family == 'Debian'
+    - fastfetch_apt is failed
+    - fastfetch_obs_distro != ''
+  ignore_errors: true
+
+- name: "ZSH | LINUX | Install fastfetch from OBS"
+  ansible.builtin.apt:
+    name: "fastfetch"
+    state: present
+  become: true
+  when:
+    - ansible_os_family == 'Debian'
+    - fastfetch_apt is failed
+    - fastfetch_obs_distro != ''
+  ignore_errors: true
 
 - name: "ZSH | OSX | Install fastfetch"
   community.general.homebrew:
     name: "fastfetch"
     state: present
   when: ansible_os_family == 'Darwin'
+  ignore_errors: true
 
 # starship linux install
 - name: "ZSH | LINUX | Check if starship is installed"
