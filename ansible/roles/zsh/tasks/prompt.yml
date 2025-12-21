@@ -29,54 +29,82 @@
     state: present
   become: true
   when: ansible_os_family == 'Debian'
-  register: fastfetch_apt
   ignore_errors: true
 
-- name: "ZSH | LINUX | Set fastfetch OBS distro"
+- name: "ZSH | LINUX | Set fastfetch install flags"
   ansible.builtin.set_fact:
-    fastfetch_obs_distro: >-
-      {{ 'Debian_' ~ ansible_distribution_major_version
-      if ansible_distribution in ['Debian', 'Raspbian']
-      else 'xUbuntu_' ~ ansible_distribution_version
-      if ansible_distribution == 'Ubuntu'
-      else '' }}
-  when:
-    - ansible_os_family == 'Debian'
-    - fastfetch_apt is failed
+    fastfetch_use_repo: >-
+      {{ (ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('25.04', '>=')))
+      or (ansible_distribution in ['Debian', 'Raspbian'] and (ansible_distribution_major_version | int >= 13)) }}
+    fastfetch_use_ppa: >-
+      {{ (ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('22.04', '>=')))
+      and not (ansible_distribution_version is version('25.04', '>=')) }}
+    fastfetch_use_deb: >-
+      {{ (ansible_distribution == 'Ubuntu' and (ansible_distribution_version is version('20.04', '>=')))
+      or (ansible_distribution in ['Debian', 'Raspbian'] and (ansible_distribution_major_version | int >= 11)) }}
+  when: ansible_os_family == 'Debian'
 
-- name: "ZSH | LINUX | Add fastfetch OBS apt key"
-  ansible.builtin.apt_key:
-    url: "https://download.opensuse.org/repositories/home:/fastfetch/{{ fastfetch_obs_distro }}/Release.key"
-    state: present
-  become: true
-  when:
-    - ansible_os_family == 'Debian'
-    - fastfetch_apt is failed
-    - fastfetch_obs_distro != ''
-  ignore_errors: true
-
-- name: "ZSH | LINUX | Add fastfetch OBS apt repo"
-  ansible.builtin.apt_repository:
-    repo: "deb https://download.opensuse.org/repositories/home:/fastfetch/{{ fastfetch_obs_distro }}/ /"
-    state: present
-    filename: "fastfetch"
-    update_cache: true
-  become: true
-  when:
-    - ansible_os_family == 'Debian'
-    - fastfetch_apt is failed
-    - fastfetch_obs_distro != ''
-  ignore_errors: true
-
-- name: "ZSH | LINUX | Install fastfetch from OBS"
+- name: "ZSH | LINUX | Install fastfetch (repo)"
   ansible.builtin.apt:
     name: "fastfetch"
     state: present
   become: true
   when:
     - ansible_os_family == 'Debian'
-    - fastfetch_apt is failed
-    - fastfetch_obs_distro != ''
+    - fastfetch_use_repo
+  ignore_errors: true
+
+- name: "ZSH | LINUX | Add fastfetch PPA"
+  ansible.builtin.apt_repository:
+    repo: "ppa:zhangsongcui3371/fastfetch"
+    state: present
+    update_cache: true
+  become: true
+  when:
+    - ansible_os_family == 'Debian'
+    - fastfetch_use_ppa
+  ignore_errors: true
+
+- name: "ZSH | LINUX | Install fastfetch (PPA)"
+  ansible.builtin.apt:
+    name: "fastfetch"
+    state: present
+  become: true
+  when:
+    - ansible_os_family == 'Debian'
+    - fastfetch_use_ppa
+  ignore_errors: true
+
+- name: "ZSH | LINUX | Set fastfetch deb arch"
+  ansible.builtin.set_fact:
+    fastfetch_deb_arch: >-
+      {{ 'amd64' if ansible_architecture in ['x86_64', 'amd64']
+      else 'arm64' if ansible_architecture in ['aarch64', 'arm64']
+      else 'armhf' if ansible_architecture in ['armv7l', 'armhf']
+      else '' }}
+  when:
+    - ansible_os_family == 'Debian'
+    - fastfetch_use_deb
+
+- name: "ZSH | LINUX | Download fastfetch deb"
+  ansible.builtin.get_url:
+    url: "https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-{{ fastfetch_deb_arch }}.deb"
+    dest: "/tmp/fastfetch-linux-{{ fastfetch_deb_arch }}.deb"
+    mode: "0644"
+  when:
+    - ansible_os_family == 'Debian'
+    - fastfetch_use_deb
+    - fastfetch_deb_arch != ''
+  ignore_errors: true
+
+- name: "ZSH | LINUX | Install fastfetch deb"
+  ansible.builtin.apt:
+    deb: "/tmp/fastfetch-linux-{{ fastfetch_deb_arch }}.deb"
+  become: true
+  when:
+    - ansible_os_family == 'Debian'
+    - fastfetch_use_deb
+    - fastfetch_deb_arch != ''
   ignore_errors: true
 
 - name: "ZSH | OSX | Install fastfetch"
