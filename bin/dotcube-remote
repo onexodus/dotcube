@@ -20,6 +20,16 @@
 
 set -e
 
+# color codes
+NC='\033[0m'
+GREEN='\033[00;32m'
+RED='\033[00;31m'
+CYAN='\033[00;36m'
+
+#emoji codes
+CHECK_MARK="${GREEN}\xE2\x9C\x94${NC}"
+X_MARK="${RED}\xE2\x9C\x96${NC}"
+
 function _check_remote_first_run {
     if ! ssh "$target_value" test -f "\$HOME/.config/.dotcube.run"; then
         echo -e ""
