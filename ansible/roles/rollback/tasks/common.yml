@@ -1,7 +1,7 @@
 ---
 - name: ROLLBACK | Register if provisioned
   stat:
-    path: "{{ ansible_user_dir }}/.dotcube.run"
+    path: "{{ ansible_user_dir }}/.config/.dotcube.run"
   register: dotcube_run
 
 - name: ROLLBACK | Register original shell
@@ -38,6 +38,6 @@
 
 - name: ROLLBACK | Remove run file
   file:
-    path: "{{ ansible_user_dir }}/.dotcube.run"
+    path: "{{ ansible_user_dir }}/.config/.dotcube.run"
     state: absent
   when: dotcube_run.stat.exists
