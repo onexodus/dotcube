@@ -17,7 +17,7 @@
   ignore_errors: true
 
 - name: ROLLBACK | Restore .zshrc backup
-  shell: cp -f "{{ ansible_user_dir }}/.zshrc.bak }}" "{{ ansible_user_dir }}/.zshrc"
+  shell: cp -f "{{ ansible_user_dir }}/.zshrc.bak" "{{ ansible_user_dir }}/.zshrc"
   when: original_shell.stdout == "/bin/zsh" and zshrc_bak.stat.exists
   ignore_errors: true
 
