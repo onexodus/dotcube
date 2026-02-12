@@ -66,7 +66,7 @@ fi
 
 # check if variables are set
 if [ -z "$CUSTOM_REPO" ] || [ -z "$BOX" ]; then
-    printf "${RED}Error: Configuration file is missing required variables.${NC}\n"
+    printf "${LRED}Error: Configuration file is missing required variables.${NC}\n"
     printf "Please run ${LGREEN}dotcube-custom edit${NC} to edit the configuration file.\n"
     exit 1
 fi
@@ -92,10 +92,10 @@ if [ -n "$IP_ADDRESS" ]; then
     fi
     printf "Deploying dotcube-custom remotely to \"${LGREEN}$IP_ADDRESS${NC}\" using box \"${LGREEN}$BOX${NC}\"\n"
     _are_you_sure
-    dotcube-remote "$IP_ADDRESS" -t custom -v $*
+    dotcube-remote "$IP_ADDRESS" -t custom -v "$@"
 else
     _are_you_sure
-    dotcube -t custom -v $*
+    dotcube -t custom -v "$@"
 fi
 
 # check if dotcube failed
