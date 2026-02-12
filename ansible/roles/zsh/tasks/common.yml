@@ -1,7 +1,7 @@
 ---
 - name: "ZSH | Check if first run"
   ansible.builtin.stat:
-    path: "{{ ansible_user_dir }}/.dotcube.run"
+    path: "{{ ansible_user_dir }}/.config/.dotcube.run"
   register: dotcube_run
 
 #create the .config folder if it doesn't exist

@@ -1,7 +1,7 @@
 ---
 - name: SYSTEM | Register if provisioned
   stat:
-    path: "{{ ansible_user_dir }}/.dotcube.run"
+    path: "{{ ansible_user_dir }}/.config/.dotcube.run"
   register: dotcube_run
 
 - name: Run Ubuntu Tasks
