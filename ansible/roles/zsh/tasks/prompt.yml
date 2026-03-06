@@ -135,6 +135,7 @@
     name: "starship"
     state: present
   when: ansible_os_family == 'Darwin'
+  ignore_errors: true
 
 # pure-prompt
 - name: "ZSH | LINUX | Install pure-prompt via npm"
