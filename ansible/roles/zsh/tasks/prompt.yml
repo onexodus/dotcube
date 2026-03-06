@@ -151,6 +151,7 @@
     name: "pure"
     state: present
   when: ansible_os_family == 'Darwin'
+  ignore_errors: true
 
 ### config files
 
